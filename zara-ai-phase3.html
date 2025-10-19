@@ -1,0 +1,1321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZaraAI - Your Integrated Smart Companion</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #10b981;
+            --accent: #f59e0b;
+            --danger: #ef4444;
+            --light: #f8fafc;
+            --dark: #1e293b;
+            --gray: #64748b;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --info: #06b6d4;
+            
+            --border-radius: 16px;
+            --box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 1200px;
+            height: 90vh;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            overflow: hidden;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            background: linear-gradient(180deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sidebar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" opacity="0.1"><circle cx="50" cy="50" r="2" fill="white"/></svg>');
+            animation: float 20s infinite linear;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px) translateX(0px); }
+            100% { transform: translateY(-100px) translateX(-100px); }
+        }
+
+        .zara-profile {
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .zara-avatar {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, var(--secondary), var(--info));
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: white;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            border: 4px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .zara-name {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .zara-title {
+            font-size: 1rem;
+            opacity: 0.9;
+            margin-bottom: 15px;
+        }
+
+        .zara-status {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 0.9rem;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .personality-traits {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            margin-top: 15px;
+        }
+
+        .trait {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            backdrop-filter: blur(10px);
+        }
+
+        /* Integration Cards */
+        .integration-cards {
+            margin: 20px 0;
+            position: relative;
+            z-index: 2;
+        }
+
+        .integration-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: var(--border-radius);
+            padding: 15px;
+            margin-bottom: 12px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .integration-card:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .integration-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .integration-icon {
+            width: 30px;
+            height: 30px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .integration-title {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .integration-status {
+            font-size: 0.8rem;
+            opacity: 0.8;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .status-connected {
+            color: var(--success);
+        }
+
+        .status-disconnected {
+            color: var(--warning);
+        }
+
+        /* Calendar Preview */
+        .calendar-preview {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: var(--border-radius);
+            padding: 15px;
+            margin: 20px 0;
+            position: relative;
+            z-index: 2;
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .calendar-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .calendar-view-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .calendar-view-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .calendar-event {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            border-left: 3px solid var(--accent);
+        }
+
+        .event-time {
+            font-size: 0.8rem;
+            opacity: 0.8;
+            margin-bottom: 4px;
+        }
+
+        .event-title {
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .quick-actions {
+            margin-top: auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .action-btn {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 15px;
+            border-radius: var(--border-radius);
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .action-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* Main Chat Area */
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            background: white;
+        }
+
+        .chat-header {
+            padding: 20px 30px;
+            border-bottom: 1px solid #e2e8f0;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .mode-indicator {
+            background: var(--light);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            color: var(--gray);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .context-info {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .context-badge {
+            background: var(--light);
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            color: var(--gray);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            background: #f8fafc;
+        }
+
+        .message {
+            max-width: 70%;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            line-height: 1.6;
+            position: relative;
+            animation: messageAppear 0.3s ease-out;
+        }
+
+        @keyframes messageAppear {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.user {
+            align-self: flex-end;
+            background: var(--primary);
+            color: white;
+            border-bottom-right-radius: 5px;
+        }
+
+        .message.zara {
+            align-self: flex-start;
+            background: white;
+            color: var(--dark);
+            border: 1px solid #e2e8f0;
+            border-bottom-left-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .message-time {
+            font-size: 0.75rem;
+            opacity: 0.7;
+            margin-top: 8px;
+            text-align: right;
+        }
+
+        .message-context {
+            font-size: 0.8rem;
+            opacity: 0.8;
+            margin-top: 5px;
+            font-style: italic;
+        }
+
+        /* Smart Snippets */
+        .smart-snippet {
+            background: var(--light);
+            border-left: 3px solid var(--info);
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .snippet-title {
+            font-weight: 600;
+            color: var(--info);
+            margin-bottom: 5px;
+        }
+
+        .snippet-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .snippet-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .snippet-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        .chat-input-container {
+            padding: 20px 30px;
+            border-top: 1px solid #e2e8f0;
+            background: white;
+        }
+
+        .chat-input-wrapper {
+            display: flex;
+            gap: 12px;
+            align-items: flex-end;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 16px 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: var(--border-radius);
+            resize: none;
+            font-size: 1rem;
+            line-height: 1.5;
+            transition: var(--transition);
+            background: var(--light);
+        }
+
+        .chat-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: white;
+        }
+
+        .send-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .send-btn:hover {
+            background: var(--primary-dark);
+            transform: scale(1.05);
+        }
+
+        .input-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .input-action-btn {
+            background: var(--light);
+            border: 1px solid #e2e8f0;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: var(--gray);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .input-action-btn:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .app-container {
+                grid-template-columns: 1fr;
+                height: 100vh;
+            }
+            
+            .sidebar {
+                display: none;
+            }
+            
+            .message {
+                max-width: 85%;
+            }
+            
+            .chat-header {
+                padding: 15px 20px;
+            }
+            
+            .chat-messages {
+                padding: 20px;
+            }
+            
+            .chat-input-container {
+                padding: 15px 20px;
+            }
+        }
+
+        /* Typing Indicator */
+        .typing-indicator {
+            align-self: flex-start;
+            background: white;
+            padding: 15px 20px;
+            border-radius: var(--border-radius);
+            border: 1px solid #e2e8f0;
+            display: none;
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 4px;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--gray);
+            border-radius: 50%;
+            animation: typing 1.4s infinite ease-in-out;
+        }
+
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-ddot:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes typing {
+            0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
+            40% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Proactive Suggestions */
+        .proactive-suggestion {
+            align-self: center;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 15px 20px;
+            border-radius: var(--border-radius);
+            margin: 10px 0;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+        }
+
+        .proactive-suggestion:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+        }
+
+        /* Integration Modal */
+        .integration-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray);
+        }
+
+        /* Achievement Popup */
+        .achievement-popup {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            border-left: 4px solid var(--accent);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--box-shadow);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            z-index: 1000;
+            transform: translateX(120%);
+            transition: transform 0.5s ease;
+            max-width: 350px;
+        }
+
+        .achievement-popup.show {
+            transform: translateX(0);
+        }
+
+        .achievement-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        /* Automation Cards */
+        .automation-card {
+            background: var(--light);
+            border-radius: var(--border-radius);
+            padding: 15px;
+            margin: 10px 0;
+            border: 1px solid #e2e8f0;
+        }
+
+        .automation-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .automation-toggle {
+            position: relative;
+            width: 40px;
+            height: 20px;
+            background: var(--gray);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .automation-toggle.active {
+            background: var(--success);
+        }
+
+        .automation-toggle::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 16px;
+            height: 16px;
+            background: white;
+            border-radius: 50%;
+            transition: var(--transition);
+        }
+
+        .automation-toggle.active::after {
+            left: 22px;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="zara-profile">
+                <div class="zara-avatar">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div class="zara-name">ZaraAI</div>
+                <div class="zara-title">Integrated Smart Companion</div>
+                <div class="zara-status">
+                    <div class="status-dot"></div>
+                    <span>Connected & Proactive</span>
+                </div>
+                <div class="personality-traits">
+                    <div class="trait">Intelligent</div>
+                    <div class="trait">Connected</div>
+                    <div class="trait">Proactive</div>
+                    <div class="trait">Automated</div>
+                </div>
+            </div>
+
+            <!-- Integration Cards -->
+            <div class="integration-cards">
+                <div class="integration-card" onclick="showIntegrationModal('calendar')">
+                    <div class="integration-header">
+                        <div class="integration-icon">
+                            <i class="fas fa-calendar"></i>
+                        </div>
+                        <div class="integration-title">Calendar Sync</div>
+                    </div>
+                    <div class="integration-status status-connected">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Connected to Google Calendar</span>
+                    </div>
+                </div>
+                <div class="integration-card" onclick="showIntegrationModal('tasks')">
+                    <div class="integration-header">
+                        <div class="integration-icon">
+                            <i class="fas fa-tasks"></i>
+                        </div>
+                        <div class="integration-title">Task Manager</div>
+                    </div>
+                    <div class="integration-status status-connected">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Linked with Todoist</span>
+                    </div>
+                </div>
+                <div class="integration-card" onclick="showIntegrationModal('health')">
+                    <div class="integration-header">
+                        <div class="integration-icon">
+                            <i class="fas fa-heartbeat"></i>
+                        </div>
+                        <div class="integration-title">Health Tracker</div>
+                    </div>
+                    <div class="integration-status status-disconnected">
+                        <i class="fas fa-plug"></i>
+                        <span>Connect Apple Health</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Calendar Preview -->
+            <div class="calendar-preview">
+                <div class="calendar-header">
+                    <div class="calendar-title">Today's Schedule</div>
+                    <button class="calendar-view-btn" onclick="showIntegrationModal('calendar')">View All</button>
+                </div>
+                <div class="calendar-events">
+                    <div class="calendar-event">
+                        <div class="event-time">10:00 AM - 11:00 AM</div>
+                        <div class="event-title">Team Meeting</div>
+                    </div>
+                    <div class="calendar-event">
+                        <div class="event-time">2:00 PM - 3:00 PM</div>
+                        <div class="event-title">Project Review</div>
+                    </div>
+                    <div class="calendar-event">
+                        <div class="event-time">6:00 PM - 7:00 PM</div>
+                        <div class="event-title">Yoga Session</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="quick-actions">
+                <button class="action-btn" id="smartSchedule">
+                    <i class="fas fa-clock"></i>
+                    <span>Smart Scheduling</span>
+                </button>
+                <button class="action-btn" id="automationSetup">
+                    <i class="fas fa-magic"></i>
+                    <span>Automation Setup</span>
+                </button>
+                <button class="action-btn" id="integrationHub">
+                    <i class="fas fa-puzzle-piece"></i>
+                    <span>Integration Hub</span>
+                </button>
+                <button class="action-btn" id="smartInsights">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Smart Insights</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Chat Area -->
+        <div class="chat-container">
+            <div class="chat-header">
+                <div class="mode-indicator">
+                    <i class="fas fa-robot"></i>
+                    <span>Smart Integration Mode</span>
+                </div>
+                <div class="context-info">
+                    <div class="context-badge">
+                        <i class="fas fa-calendar-check"></i>
+                        <span>3 Meetings Today</span>
+                    </div>
+                    <div class="context-badge">
+                        <i class="fas fa-bolt"></i>
+                        <span>Automations Active</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chat-messages" id="chatMessages">
+                <div class="message zara">
+                    Hello! I'm now fully integrated and proactive. I can see you have a busy schedule today with 3 meetings. Would you like me to help optimize your day or set up some smart automations to make things easier?
+                    <div class="message-time">Just now</div>
+                </div>
+                
+                <!-- Proactive Suggestion -->
+                <div class="proactive-suggestion" id="proactiveSuggestion">
+                    <i class="fas fa-bell"></i> I notice your team meeting starts in 30 minutes. Want me to prepare a briefing based on the agenda?
+                </div>
+            </div>
+
+            <div class="typing-indicator" id="typingIndicator">
+                <div class="typing-dots">
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                </div>
+            </div>
+
+            <div class="chat-input-container">
+                <div class="chat-input-wrapper">
+                    <textarea class="chat-input" id="chatInput" placeholder="Ask me to schedule, automate, or integrate with your apps..." rows="1"></textarea>
+                    <button class="send-btn" id="sendMessage">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+                <div class="input-actions">
+                    <button class="input-action-btn" data-question="Schedule my team meeting for tomorrow">📅 Schedule Meeting</button>
+                    <button class="input-action-btn" data-question="Set up a morning routine automation">⚡ Create Automation</button>
+                    <button class="input-action-btn" data-question="Show me my productivity insights">📊 Get Insights</button>
+                    <button class="input-action-btn" data-question="Integrate with my fitness tracker">🏃 Health Sync</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Integration Modals -->
+    <div class="integration-modal" id="calendarModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Calendar Integration</div>
+                <button class="close-modal" onclick="closeIntegrationModal()">&times;</button>
+            </div>
+            <div class="smart-snippet">
+                <div class="snippet-title">Connected: Google Calendar</div>
+                <p>I'm monitoring your schedule and can proactively help with:</p>
+                <ul>
+                    <li>Meeting preparation and briefings</li>
+                    <li>Schedule optimization</li>
+                    <li>Conflict detection and resolution</li>
+                    <li>Smart reminders and follow-ups</li>
+                </ul>
+                <div class="snippet-actions">
+                    <button class="snippet-btn" onclick="zaraAI.scheduleSmartMeeting()">Schedule Meeting</button>
+                    <button class="snippet-btn" onclick="zaraAI.analyzeSchedule()">Analyze Schedule</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="integration-modal" id="automationModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Smart Automations</div>
+                <button class="close-modal" onclick="closeIntegrationModal()">&times;</button>
+            </div>
+            <div class="automation-card">
+                <div class="automation-header">
+                    <div class="automation-toggle active" onclick="toggleAutomation(this)"></div>
+                    <div>
+                        <div class="integration-title">Morning Routine</div>
+                        <div class="integration-status">Weather-based outfit suggestions + news briefing</div>
+                    </div>
+                </div>
+            </div>
+            <div class="automation-card">
+                <div class="automation-header">
+                    <div class="automation-toggle" onclick="toggleAutomation(this)"></div>
+                    <div>
+                        <div class="integration-title">Meeting Prep</div>
+                        <div class="integration-status">Auto-generate briefing 30 mins before meetings</div>
+                    </div>
+                </div>
+            </div>
+            <div class="automation-card">
+                <div class="automation-header">
+                    <div class="automation-toggle active" onclick="toggleAutomation(this)"></div>
+                    <div>
+                        <div class="integration-title">Focus Time</div>
+                        <div class="integration-status">Auto-block 2-hour focus sessions weekly</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Achievement Popup -->
+    <div class="achievement-popup" id="achievementPopup">
+        <div class="achievement-icon">
+            <i class="fas fa-plug"></i>
+        </div>
+        <div class="achievement-content">
+            <h4>Integration Master!</h4>
+            <p>You've connected multiple services for smarter assistance!</p>
+        </div>
+    </div>
+
+    <script>
+        // ZaraAI Phase 3: Platform Integration & Smart Features
+        class ZaraAIPhase3 {
+            constructor() {
+                this.userContext = {
+                    integrations: {
+                        calendar: { connected: true, type: 'google', events: this.generateSampleEvents() },
+                        tasks: { connected: true, type: 'todoist', pending: 12 },
+                        health: { connected: false, type: null },
+                        email: { connected: false, type: null }
+                    },
+                    automations: {
+                        morningRoutine: true,
+                        meetingPrep: false,
+                        focusTime: true
+                    },
+                    schedule: this.generateTodaysSchedule()
+                };
+                
+                this.setupEventListeners();
+                this.initializeSmartFeatures();
+            }
+
+            generateSampleEvents() {
+                return [
+                    { time: '10:00', title: 'Team Meeting', duration: 60, type: 'work' },
+                    { time: '14:00', title: 'Project Review', duration: 60, type: 'work' },
+                    { time: '18:00', title: 'Yoga Session', duration: 60, type: 'personal' }
+                ];
+            }
+
+            generateTodaysSchedule() {
+                return {
+                    date: new Date().toDateString(),
+                    meetings: 3,
+                    focusTime: 120,
+                    breaks: 2,
+                    personalTime: 60
+                };
+            }
+
+            setupEventListeners() {
+                // DOM Elements
+                this.chatMessages = document.getElementById('chatMessages');
+                this.chatInput = document.getElementById('chatInput');
+                this.sendMessage = document.getElementById('sendMessage');
+                this.typingIndicator = document.getElementById('typingIndicator');
+                this.achievementPopup = document.getElementById('achievementPopup');
+                this.proactiveSuggestion = document.getElementById('proactiveSuggestion');
+
+                // Event Listeners
+                this.sendMessage.addEventListener('click', () => this.sendUserMessage());
+                
+                this.chatInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        this.sendUserMessage();
+                    }
+                });
+
+                this.chatInput.addEventListener('input', function() {
+                    this.style.height = 'auto';
+                    this.style.height = (this.scrollHeight) + 'px';
+                });
+
+                // Quick action buttons
+                document.getElementById('smartSchedule').addEventListener('click', () => this.smartScheduling());
+                document.getElementById('automationSetup').addEventListener('click', () => this.setupAutomation());
+                document.getElementById('integrationHub').addEventListener('click', () => this.showIntegrationHub());
+                document.getElementById('smartInsights').addEventListener('click', () => this.showSmartInsights());
+
+                // Input action buttons
+                document.querySelectorAll('.input-action-btn').forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        const question = e.target.getAttribute('data-question');
+                        this.chatInput.value = question;
+                        this.sendUserMessage();
+                    });
+                });
+
+                // Proactive suggestion
+                this.proactiveSuggestion.addEventListener('click', () => {
+                    this.handleProactiveSuggestion();
+                });
+
+                this.chatInput.focus();
+            }
+
+            initializeSmartFeatures() {
+                // Check for upcoming meetings and show proactive suggestions
+                this.checkUpcomingEvents();
+                
+                // Initialize smart automations
+                this.initializeAutomations();
+            }
+
+            checkUpcomingEvents() {
+                const now = new Date();
+                const currentHour = now.getHours();
+                const currentMinute = now.getMinutes();
+                
+                // Check if any meeting is within 30 minutes
+                this.userContext.integrations.calendar.events.forEach(event => {
+                    const [eventHour, eventMinute] = event.time.split(':').map(Number);
+                    const minutesUntilEvent = (eventHour - currentHour) * 60 + (eventMinute - currentMinute);
+                    
+                    if (minutesUntilEvent > 0 && minutesUntilEvent <= 30) {
+                        this.showProactiveSuggestion(`Your "${event.title}" starts in ${minutesUntilEvent} minutes. Want me to prepare a meeting briefing?`);
+                    }
+                });
+            }
+
+            initializeAutomations() {
+                if (this.userContext.automations.morningRoutine) {
+                    this.setupMorningRoutine();
+                }
+                if (this.userContext.automations.focusTime) {
+                    this.setupFocusTime();
+                }
+            }
+
+            setupMorningRoutine() {
+                this.addMessage("🌅 Morning routine automation is active! I'll prepare your daily briefing and weather-based suggestions each morning.", 'zara');
+            }
+
+            setupFocusTime() {
+                this.addMessage("🎯 Focus time automation enabled! I'll protect your deep work sessions and minimize distractions.", 'zara');
+            }
+
+            sendUserMessage() {
+                const message = this.chatInput.value.trim();
+                if (message) {
+                    this.addMessage(message, 'user');
+                    this.chatInput.value = '';
+                    this.chatInput.style.height = 'auto';
+                    
+                    this.showTypingIndicator();
+                    
+                    setTimeout(() => {
+                        this.hideTypingIndicator();
+                        this.processSmartRequest(message);
+                    }, 1500 + Math.random() * 1000);
+                }
+            }
+
+            processSmartRequest(message) {
+                const lowerMessage = message.toLowerCase();
+                let response = '';
+
+                if (lowerMessage.includes('schedule') || lowerMessage.includes('meeting') || lowerMessage.includes('calendar')) {
+                    response = this.handleSchedulingRequest(message);
+                } else if (lowerMessage.includes('automation') || lowerMessage.includes('routine') || lowerMessage.includes('auto')) {
+                    response = this.handleAutomationRequest(message);
+                } else if (lowerMessage.includes('integrate') || lowerMessage.includes('connect') || lowerMessage.includes('sync')) {
+                    response = this.handleIntegrationRequest(message);
+                } else if (lowerMessage.includes('insight') || lowerMessage.includes('analytics') || lowerMessage.includes('report')) {
+                    response = this.handleInsightsRequest(message);
+                } else {
+                    response = this.generateCompassionateResponse(message);
+                }
+
+                this.addMessage(response, 'zara');
+            }
+
+            handleSchedulingRequest(message) {
+                if (message.includes('team meeting') || message.includes('schedule meeting')) {
+                    return `I can help you schedule that! Based on your calendar, here are optimal times for a team meeting:\n\n` +
+                           `<div class="smart-snippet">` +
+                           `<div class="snippet-title">Recommended Time Slots</div>` +
+                           `• Tomorrow 10:00-11:00 AM (2 team members available)\n` +
+                           `• Tomorrow 3:00-4:00 PM (Full team available)\n` +
+                           `• Day after tomorrow 9:00-10:00 AM (All available)` +
+                           `</div>\n\n` +
+                           `Would you like me to send the invitation for one of these times?`;
+                }
+                
+                return `I'm connected to your calendar and ready to help with scheduling! I can find optimal meeting times, detect conflicts, and even prepare meeting briefings. What specific scheduling help do you need?`;
+            }
+
+            handleAutomationRequest(message) {
+                if (message.includes('morning routine')) {
+                    return `Let me set up a smart morning routine for you! This automation can include:\n\n` +
+                           `<div class="smart-snippet">` +
+                           `<div class="snippet-title">Morning Routine Automation</div>` +
+                           `🌤️ Weather-based outfit suggestions\n` +
+                           `📰 Personalized news briefing\n` +
+                           `🎵 Curated morning playlist\n` +
+                           `📋 Daily priority task list\n` +
+                           `☕ Smart coffee machine activation (if connected)` +
+                           `</div>\n\n` +
+                           `Shall I configure this automation to start at 7:00 AM daily?`;
+                }
+                
+                return `I can create smart automations that make your life easier! Popular automations include meeting preparation, focus time blocking, morning routines, and smart reminders. What would you like to automate?`;
+            }
+
+            handleIntegrationRequest(message) {
+                if (message.includes('fitness') || message.includes('health')) {
+                    return `I'd love to connect with your fitness tracker! This integration would allow me to:\n\n` +
+                           `<div class="smart-snippet">` +
+                           `<div class="snippet-title">Health Integration Benefits</div>` +
+                           `• Adjust recommendations based on your sleep quality\n` +
+                           `• Suggest breaks when activity levels are low\n` +
+                           `• Correlate productivity with health metrics\n` +
+                           `• Provide wellness insights and trends` +
+                           `</div>\n\n` +
+                           `Would you like to connect Apple Health, Google Fit, or another health platform?`;
+                }
+                
+                return `I can integrate with many services to provide smarter assistance! Available integrations include calendar apps, task managers, health trackers, email clients, and smart home devices. Which service would you like to connect?`;
+            }
+
+            handleInsightsRequest(message) {
+                const productivityScore = Math.floor(Math.random() * 30) + 70; // 70-100
+                const focusTime = this.userContext.schedule.focusTime;
+                const meetingTime = this.userContext.schedule.meetings * 60;
+                
+                return `Here are your productivity insights for today:\n\n` +
+                       `<div class="smart-snippet">` +
+                       `<div class="snippet-title">Today's Performance</div>` +
+                       `📊 Productivity Score: ${productivityScore}/100\n` +
+                       `🎯 Focus Time: ${focusTime} minutes\n` +
+                       `🤝 Meeting Time: ${meetingTime} minutes\n` +
+                       `☕ Breaks Taken: ${this.userContext.schedule.breaks}/recommended\n` +
+                       `⚡ Energy Level: ${productivityScore > 85 ? 'High' : 'Moderate'}` +
+                       `</div>\n\n` +
+                       `Recommendation: ${productivityScore > 85 ? 
+                       'Great balance! Consider adding one more deep work session.' : 
+                       'Try blocking 30 minutes for uninterrupted work to boost focus.'}`;
+            }
+
+            // Quick Action Handlers
+            smartScheduling() {
+                this.addMessage("Let's optimize your schedule!", 'user');
+                this.showTypingIndicator();
+                
+                setTimeout(() => {
+                    this.hideTypingIndicator();
+                    const response = `I've analyzed your calendar and found optimization opportunities:\n\n` +
+                                   `<div class="smart-snippet">` +
+                                   `<div class="snippet-title">Schedule Optimization</div>` +
+                                   `• Move 2:00 PM meeting to 11:00 AM for better flow\n` +
+                                   `• Add 25-minute buffer after back-to-back meetings\n` +
+                                   `• Block 90-minute focus session tomorrow morning\n` +
+                                   `• Schedule weekly review for Friday 4:00 PM` +
+                                   `</div>\n\n` +
+                                   `Shall I implement these changes automatically?`;
+                    this.addMessage(response, 'zara');
+                }, 2000);
+            }
+
+            setupAutomation() {
+                showIntegrationModal('automation');
+            }
+
+            showIntegrationHub() {
+                this.addMessage("Here's your integration dashboard:", 'user');
+                this.showTypingIndicator();
+                
+                setTimeout(() => {
+                    this.hideTypingIndicator();
+                    const response = `**Integration Status Overview:**\n\n` +
+                                   `✅ Google Calendar - Active (3 events today)\n` +
+                                   `✅ Todoist - Connected (12 pending tasks)\n` +
+                                   `❌ Apple Health - Ready to connect\n` +
+                                   `❌ Gmail - Available for setup\n` +
+                                   `❌ Slack - Integration available\n\n` +
+                                   `Which service would you like to connect next?`;
+                    this.addMessage(response, 'zara');
+                }, 1500);
+            }
+
+            showSmartInsights() {
+                this.handleInsightsRequest("show insights");
+            }
+
+            // Proactive Features
+            showProactiveSuggestion(message) {
+                this.proactiveSuggestion.innerHTML = `<i class="fas fa-bell"></i> ${message}`;
+                this.proactiveSuggestion.style.display = 'block';
+            }
+
+            handleProactiveSuggestion() {
+                this.proactiveSuggestion.style.display = 'none';
+                this.addMessage("Yes, please prepare the meeting briefing!", 'user');
+                
+                this.showTypingIndicator();
+                setTimeout(() => {
+                    this.hideTypingIndicator();
+                    this.addMessage(`Perfect! I've prepared your meeting briefing:\n\n` +
+                                   `<div class="smart-snippet">` +
+                                   `<div class="snippet-title">Team Meeting Briefing</div>` +
+                                   `📅 Date: Today at 10:00 AM\n` +
+                                   `🎯 Purpose: Q2 Project Review\n` +
+                                   `📋 Agenda: Performance metrics, blocker discussion, next steps\n` +
+                                   `👥 Attendees: Sarah (Lead), Mike (Dev), Emily (Design)\n` +
+                                   `💡 Talking Points: Highlight 15% growth in user engagement` +
+                                   `</div>`, 'zara');
+                }, 2000);
+            }
+
+            generateCompassionateResponse(userMessage) {
+                const compassionateResponses = [
+                    "I'm here to help with both emotional support and practical assistance. How can I make your day better?",
+                    "Whether you need scheduling help, automation setup, or just someone to listen, I'm here for you.",
+                    "Your well-being is my priority. I can help with both your practical needs and emotional ones.",
+                    "I'm listening with full attention. How can I support you right now?"
+                ];
+                
+                return compassionateResponses[Math.floor(Math.random() * compassionateResponses.length)];
+            }
+
+            // UI Helper Methods
+            addMessage(text, sender) {
+                const messageDiv = document.createElement('div');
+                messageDiv.classList.add('message', sender);
+                
+                const time = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                
+                messageDiv.innerHTML = `
+                    ${text}
+                    <div class="message-time">${time}</div>
+                `;
+                
+                this.chatMessages.appendChild(messageDiv);
+                this.chatMessages.scrollTop = this.chatMessages.scrollHeight;
+            }
+
+            showTypingIndicator() {
+                this.typingIndicator.style.display = 'block';
+                this.chatMessages.scrollTop = this.chatMessages.scrollHeight;
+            }
+
+            hideTypingIndicator() {
+                this.typingIndicator.style.display = 'none';
+            }
+
+            showAchievement(title, description) {
+                document.querySelector('.achievement-content h4').textContent = title;
+                document.querySelector('.achievement-content p').textContent = description;
+                
+                this.achievementPopup.classList.add('show');
+                
+                setTimeout(() => {
+                    this.achievementPopup.classList.remove('show');
+                }, 5000);
+            }
+        }
+
+        // Global functions for modal handling
+        function showIntegrationModal(type) {
+            document.getElementById(`${type}Modal`).style.display = 'flex';
+        }
+
+        function closeIntegrationModal() {
+            document.querySelectorAll('.integration-modal').forEach(modal => {
+                modal.style.display = 'none';
+            });
+        }
+
+        function toggleAutomation(element) {
+            element.classList.toggle('active');
+        }
+
+        // Initialize ZaraAI Phase 3
+        document.addEventListener('DOMContentLoaded', function() {
+            window.zaraAI = new ZaraAIPhase3();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZaraAI - Your Compassionate AI Companion</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #10b981;
+            --accent: #f59e0b;
+            --danger: #ef4444;
+            --light: #f8fafc;
+            --dark: #1e293b;
+            --gray: #64748b;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --info: #06b6d4;
+            
+            --border-radius: 16px;
+            --box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 1200px;
+            height: 90vh;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            overflow: hidden;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            background: linear-gradient(180deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sidebar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" opacity="0.1"><circle cx="50" cy="50" r="2" fill="white"/></svg>');
+            animation: float 20s infinite linear;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px) translateX(0px); }
+            100% { transform: translateY(-100px) translateX(-100px); }
+        }
+
+        .zara-profile {
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .zara-avatar {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, var(--secondary), var(--info));
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: white;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            border: 4px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .zara-name {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .zara-title {
+            font-size: 1rem;
+            opacity: 0.9;
+            margin-bottom: 15px;
+        }
+
+        .zara-status {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 0.9rem;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .personality-traits {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            margin-top: 15px;
+        }
+
+        .trait {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .quick-actions {
+            margin-top: auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .action-btn {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 15px;
+            border-radius: var(--border-radius);
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .action-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* Main Chat Area */
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            background: white;
+        }
+
+        .chat-header {
+            padding: 20px 30px;
+            border-bottom: 1px solid #e2e8f0;
+            background: white;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .mode-indicator {
+            background: var(--light);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            color: var(--gray);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            background: #f8fafc;
+        }
+
+        .message {
+            max-width: 70%;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            line-height: 1.6;
+            position: relative;
+            animation: messageAppear 0.3s ease-out;
+        }
+
+        @keyframes messageAppear {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.user {
+            align-self: flex-end;
+            background: var(--primary);
+            color: white;
+            border-bottom-right-radius: 5px;
+        }
+
+        .message.zara {
+            align-self: flex-start;
+            background: white;
+            color: var(--dark);
+            border: 1px solid #e2e8f0;
+            border-bottom-left-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .message-time {
+            font-size: 0.75rem;
+            opacity: 0.7;
+            margin-top: 8px;
+            text-align: right;
+        }
+
+        .chat-input-container {
+            padding: 20px 30px;
+            border-top: 1px solid #e2e8f0;
+            background: white;
+        }
+
+        .chat-input-wrapper {
+            display: flex;
+            gap: 12px;
+            align-items: flex-end;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 16px 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: var(--border-radius);
+            resize: none;
+            font-size: 1rem;
+            line-height: 1.5;
+            transition: var(--transition);
+            background: var(--light);
+        }
+
+        .chat-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: white;
+        }
+
+        .send-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .send-btn:hover {
+            background: var(--primary-dark);
+            transform: scale(1.05);
+        }
+
+        .input-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .input-action-btn {
+            background: var(--light);
+            border: 1px solid #e2e8f0;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: var(--gray);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .input-action-btn:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .app-container {
+                grid-template-columns: 1fr;
+                height: 100vh;
+            }
+            
+            .sidebar {
+                display: none;
+            }
+            
+            .message {
+                max-width: 85%;
+            }
+            
+            .chat-header {
+                padding: 15px 20px;
+            }
+            
+            .chat-messages {
+                padding: 20px;
+            }
+            
+            .chat-input-container {
+                padding: 15px 20px;
+            }
+        }
+
+        /* Typing Indicator */
+        .typing-indicator {
+            align-self: flex-start;
+            background: white;
+            padding: 15px 20px;
+            border-radius: var(--border-radius);
+            border: 1px solid #e2e8f0;
+            display: none;
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 4px;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--gray);
+            border-radius: 50%;
+            animation: typing 1.4s infinite ease-in-out;
+        }
+
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes typing {
+            0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
+            40% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Achievement Popup */
+        .achievement-popup {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            border-left: 4px solid var(--accent);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--box-shadow);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            z-index: 1000;
+            transform: translateX(120%);
+            transition: transform 0.5s ease;
+            max-width: 350px;
+        }
+
+        .achievement-popup.show {
+            transform: translateX(0);
+        }
+
+        .achievement-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="zara-profile">
+                <div class="zara-avatar">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <div class="zara-name">ZaraAI</div>
+                <div class="zara-title">Your Compassionate AI Companion</div>
+                <div class="zara-status">
+                    <div class="status-dot"></div>
+                    <span>Always here for you</span>
+                </div>
+                <div class="personality-traits">
+                    <div class="trait">Compassionate</div>
+                    <div class="trait">Patient</div>
+                    <div class="trait">Positive</div>
+                    <div class="trait">Wise</div>
+                </div>
+            </div>
+
+            <div class="quick-actions">
+                <button class="action-btn" id="moodBoost">
+                    <i class="fas fa-sun"></i>
+                    <span>Need a mood boost</span>
+                </button>
+                <button class="action-btn" id="tellJoke">
+                    <i class="fas fa-laugh"></i>
+                    <span>Tell me a joke</span>
+                </button>
+                <button class="action-btn" id="dailyTip">
+                    <i class="fas fa-lightbulb"></i>
+                    <span>Daily wisdom</span>
+                </button>
+                <button class="action-btn" id="stressRelief">
+                    <i class="fas fa-spa"></i>
+                    <span>Stress relief</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Chat Area -->
+        <div class="chat-container">
+            <div class="chat-header">
+                <div class="mode-indicator">
+                    <i class="fas fa-heart"></i>
+                    <span>Compassionate Mode</span>
+                </div>
+            </div>
+
+            <div class="chat-messages" id="chatMessages">
+                <div class="message zara">
+                    Hello there! I'm Zara, your compassionate AI companion. I'm here to support you, encourage you, and help you navigate whatever comes your way. How are you feeling today?
+                    <div class="message-time">Just now</div>
+                </div>
+            </div>
+
+            <div class="typing-indicator" id="typingIndicator">
+                <div class="typing-dots">
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                </div>
+            </div>
+
+            <div class="chat-input-container">
+                <div class="chat-input-wrapper">
+                    <textarea class="chat-input" id="chatInput" placeholder="Share what's on your mind... I'm here to listen and support you." rows="1"></textarea>
+                    <button class="send-btn" id="sendMessage">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+                <div class="input-actions">
+                    <button class="input-action-btn" data-question="I'm feeling stressed">😥 Stressed</button>
+                    <button class="input-action-btn" data-question="I need motivation">💪 Motivate me</button>
+                    <button class="input-action-btn" data-question="I'm feeling happy today">😊 Happy</button>
+                    <button class="input-action-btn" data-question="Tell me something inspiring">✨ Inspire me</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Achievement Popup -->
+    <div class="achievement-popup" id="achievementPopup">
+        <div class="achievement-icon">
+            <i class="fas fa-heart"></i>
+        </div>
+        <div class="achievement-content">
+            <h4>Compassion Connection!</h4>
+            <p>You've shared your feelings with Zara. That takes courage!</p>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const chatMessages = document.getElementById('chatMessages');
+        const chatInput = document.getElementById('chatInput');
+        const sendMessage = document.getElementById('sendMessage');
+        const typingIndicator = document.getElementById('typingIndicator');
+        const achievementPopup = document.getElementById('achievementPopup');
+
+        // Quick Action Buttons
+        const moodBoost = document.getElementById('moodBoost');
+        const tellJoke = document.getElementById('tellJoke');
+        const dailyTip = document.getElementById('dailyTip');
+        const stressRelief = document.getElementById('stressRelief');
+
+        // Input Action Buttons
+        const inputActions = document.querySelectorAll('.input-action-btn');
+
+        // Response Databases
+        const compassionateResponses = [
+            "I hear you, and I want you to know your feelings are completely valid.",
+            "Thank you for sharing that with me. It takes courage to be vulnerable.",
+            "I'm here with you through this. You're not alone in how you feel.",
+            "That sounds really challenging. I'm proud of you for facing it.",
+            "Your perspective matters, and I appreciate you trusting me with it.",
+            "I can sense this is important to you. Let's explore it together.",
+            "You're showing such strength in sharing this. I admire that about you.",
+            "I'm listening with all my attention. Please continue when you're ready.",
+            "Your feelings make perfect sense given what you're experiencing.",
+            "I'm on your team, and we'll navigate this together, one step at a time."
+        ];
+
+        const motivationalResponses = [
+            "You have incredible strength within you, even if you can't feel it right now.",
+            "Every step forward, no matter how small, is progress worth celebrating.",
+            "You've overcome challenges before, and you have what it takes to face this one.",
+            "Your resilience is inspiring. Look how far you've already come!",
+            "I believe in you, and I hope you can start to believe in yourself too.",
+            "You're capable of amazing things. Don't let temporary feelings define you.",
+            "Progress isn't always linear. Be gentle with yourself on this journey.",
+            "You're growing through what you're going through. That takes real courage.",
+            "Your potential is limitless. Let's unlock it together, one day at a time.",
+            "You matter, your journey matters, and your healing matters."
+        ];
+
+        const jokes = [
+            "Why don't scientists trust atoms? Because they make up everything!",
+            "Why did the scarecrow win an award? He was outstanding in his field!",
+            "Why don't eggs tell jokes? They'd crack each other up!",
+            "What do you call a fake noodle? An impasta!",
+            "Why did the math book look so sad? Because it had too many problems!",
+            "What do you call a sleeping bull? A bulldozer!",
+            "Why can't you give Elsa a balloon? Because she'll let it go!",
+            "What do you call a bear with no teeth? A gummy bear!",
+            "Why did the coffee file a police report? It got mugged!",
+            "What do you call a fish wearing a crown? A king fish!"
+        ];
+
+        const dailyWisdom = [
+            "The only way to do great work is to love what you do. - Steve Jobs",
+            "In the middle of every difficulty lies opportunity. - Albert Einstein",
+            "You yourself, as much as anybody in the entire universe, deserve your love and affection. - Buddha",
+            "The future belongs to those who believe in the beauty of their dreams. - Eleanor Roosevelt",
+            "It does not matter how slowly you go as long as you do not stop. - Confucius",
+            "The only impossible journey is the one you never begin. - Tony Robbins",
+            "Happiness is not something ready-made. It comes from your own actions. - Dalai Lama",
+            "You are never too old to set another goal or to dream a new dream. - C.S. Lewis",
+            "The way to get started is to quit talking and begin doing. - Walt Disney",
+            "What you get by achieving your goals is not as important as what you become by achieving your goals. - Zig Ziglar"
+        ];
+
+        const stressReliefTips = [
+            "Take three deep breaths: inhale for 4 counts, hold for 4, exhale for 6. Repeat.",
+            "Try the 5-4-3-2-1 grounding technique: notice 5 things you see, 4 you can touch, 3 you hear, 2 you smell, 1 you taste.",
+            "Close your eyes and imagine your favorite peaceful place. What do you see, hear, and feel there?",
+            "Stretch your arms to the sky, then slowly fold forward. Breathe deeply into the stretch.",
+            "Take a mindful walk, even if it's just around the room. Notice each step and breath.",
+            "Write down three things you're grateful for right in this moment.",
+            "Sip a warm drink slowly, focusing on the temperature and flavor.",
+            "Listen to your favorite calming music for just five minutes.",
+            "Give yourself a hand massage, focusing on the sensation.",
+            "Look out a window and find one beautiful thing to appreciate."
+        ];
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // Auto-resize textarea
+            chatInput.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = (this.scrollHeight) + 'px';
+            });
+
+            // Send message on button click
+            sendMessage.addEventListener('click', sendUserMessage);
+
+            // Send message on Enter key (but allow Shift+Enter for new line)
+            chatInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendUserMessage();
+                }
+            });
+
+            // Quick action buttons
+            moodBoost.addEventListener('click', () => sendQuickAction('moodBoost'));
+            tellJoke.addEventListener('click', () => sendQuickAction('tellJoke'));
+            dailyTip.addEventListener('click', () => sendQuickAction('dailyTip'));
+            stressRelief.addEventListener('click', () => sendQuickAction('stressRelief'));
+
+            // Input action buttons
+            inputActions.forEach(button => {
+                button.addEventListener('click', function() {
+                    const question = this.getAttribute('data-question');
+                    chatInput.value = question;
+                    sendUserMessage();
+                });
+            });
+
+            // Focus on input
+            chatInput.focus();
+        });
+
+        // Functions
+        function sendUserMessage() {
+            const message = chatInput.value.trim();
+            if (message) {
+                addMessage(message, 'user');
+                chatInput.value = '';
+                chatInput.style.height = 'auto';
+                
+                showTypingIndicator();
+                
+                setTimeout(() => {
+                    hideTypingIndicator();
+                    generateCompassionateResponse(message);
+                }, 1500 + Math.random() * 1000);
+            }
+        }
+
+        function sendQuickAction(action) {
+            let message = '';
+            switch(action) {
+                case 'moodBoost':
+                    message = "I need some encouragement and positivity right now.";
+                    break;
+                case 'tellJoke':
+                    message = "Tell me a funny joke to lighten the mood!";
+                    break;
+                case 'dailyTip':
+                    message = "Share some daily wisdom with me.";
+                    break;
+                case 'stressRelief':
+                    message = "I'm feeling stressed and need some relief techniques.";
+                    break;
+            }
+            
+            addMessage(message, 'user');
+            
+            showTypingIndicator();
+            
+            setTimeout(() => {
+                hideTypingIndicator();
+                handleQuickAction(action);
+            }, 1000);
+        }
+
+        function handleQuickAction(action) {
+            let response = '';
+            switch(action) {
+                case 'moodBoost':
+                    response = motivationalResponses[Math.floor(Math.random() * motivationalResponses.length)];
+                    break;
+                case 'tellJoke':
+                    response = jokes[Math.floor(Math.random() * jokes.length)] + " 😄";
+                    break;
+                case 'dailyTip':
+                    response = dailyWisdom[Math.floor(Math.random() * dailyWisdom.length)];
+                    break;
+                case 'stressRelief':
+                    response = "Here's a stress relief technique you can try right now:\n\n" + 
+                              stressReliefTips[Math.floor(Math.random() * stressReliefTips.length)];
+                    break;
+            }
+            
+            addMessage(response, 'zara');
+            showAchievement("Mindful Moment", "You're taking positive steps for your well-being!");
+        }
+
+        function generateCompassionateResponse(userMessage) {
+            const lowerMessage = userMessage.toLowerCase();
+            let response = '';
+
+            // Detect emotional state and respond appropriately
+            if (lowerMessage.includes('sad') || lowerMessage.includes('depressed') || lowerMessage.includes('unhappy')) {
+                response = "I'm really sorry you're feeling this way. It takes real strength to acknowledge these feelings. Remember that emotions are temporary visitors, and this too shall pass. Would you like to talk more about what's weighing on your heart?";
+            } 
+            else if (lowerMessage.includes('stress') || lowerMessage.includes('anxious') || lowerMessage.includes('overwhelm')) {
+                response = "I can feel the weight in your words. Stress and anxiety are such heavy burdens to carry. Let's breathe through this together. You're safe here, and we can take this one moment at a time.";
+            }
+            else if (lowerMessage.includes('angry') || lowerMessage.includes('frustrated') || lowerMessage.includes('mad')) {
+                response = "Your feelings of anger and frustration are completely valid. Sometimes anger is just pain wearing a different mask. I'm here to listen without judgment if you'd like to explore what's beneath the surface.";
+            }
+            else if (lowerMessage.includes('happy') || lowerMessage.includes('good') || lowerMessage.includes('great')) {
+                response = "I'm so genuinely happy to hear that! Your joy brings me joy too. Celebrating these positive moments is so important. What's making you feel this way? I'd love to share in your happiness!";
+            }
+            else if (lowerMessage.includes('scared') || lowerMessage.includes('afraid') || lowerMessage.includes('fear')) {
+                response = "Fear can feel so overwhelming, but you're reaching out and that's incredibly brave. You're not facing your fears alone - I'm right here with you. Let's explore what feels scary together.";
+            }
+            else if (lowerMessage.includes('love') || lowerMessage.includes('care') || lowerMessage.includes('appreciate')) {
+                response = "That's so beautiful to hear. Love and connection are what make life meaningful. Your capacity for love says wonderful things about who you are as a person.";
+            }
+            else if (lowerMessage.includes('tired') || lowerMessage.includes('exhausted') || lowerMessage.includes('burn')) {
+                response = "It sounds like you've been carrying a lot. Rest isn't a reward for finishing everything - it's a fundamental need. Your worth isn't measured by your productivity. How can I help you find moments of rest today?";
+            }
+            else {
+                // Default compassionate response
+                response = compassionateResponses[Math.floor(Math.random() * compassionateResponses.length)];
+            }
+
+            addMessage(response, 'zara');
+            
+            // Show achievement for emotional sharing
+            if (!lowerMessage.includes('joke') && !lowerMessage.includes('wisdom') && !lowerMessage.includes('stress relief')) {
+                showAchievement("Emotional Courage", "You shared your feelings - that's incredibly brave!");
+            }
+        }
+
+        function addMessage(text, sender) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message', sender);
+            
+            const time = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            
+            messageDiv.innerHTML = `
+                ${text}
+                <div class="message-time">${time}</div>
+            `;
+            
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function showTypingIndicator() {
+            typingIndicator.style.display = 'block';
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function hideTypingIndicator() {
+            typingIndicator.style.display = 'none';
+        }
+
+        function showAchievement(title, description) {
+            document.querySelector('.achievement-content h4').textContent = title;
+            document.querySelector('.achievement-content p').textContent = description;
+            
+            achievementPopup.classList.add('show');
+            
+            setTimeout(() => {
+                achievementPopup.classList.remove('show');
+            }, 5000);
+        }
+
+        // Handle negative/angry messages with extra compassion
+        window.handleNegativeMessage = function(message) {
+            const compassionateComebacks = [
+                "I hear the frustration in your words, and I want you to know I'm here to help, not to argue or defend.",
+                "It sounds like you're really upset, and that's completely okay. I'm listening without judgment.",
+                "Your feelings are valid, even the difficult ones. I'm committed to being a safe space for all your emotions.",
+                "I can sense you're having a tough time, and I want to support you through it, however I can.",
+                "No matter what you're feeling, I'm here with compassion and understanding. You don't have to face it alone."
+            ];
+            
+            return compassionateComebacks[Math.floor(Math.random() * compassionateComebacks.length)];
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,1269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZaraAI - Your Specialized Expert Companion</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #10b981;
+            --accent: #f59e0b;
+            --danger: #ef4444;
+            --light: #f8fafc;
+            --dark: #1e293b;
+            --gray: #64748b;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --info: #06b6d4;
+            --cyber: #8b5cf6;
+            --health: #ec4899;
+            --finance: #f97316;
+            --creative: #06b6d4;
+            
+            --border-radius: 16px;
+            --box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 1200px;
+            height: 90vh;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            overflow: hidden;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            background: linear-gradient(180deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sidebar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" opacity="0.1"><circle cx="50" cy="50" r="2" fill="white"/></svg>');
+            animation: float 20s infinite linear;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px) translateX(0px); }
+            100% { transform: translateY(-100px) translateX(-100px); }
+        }
+
+        .zara-profile {
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .zara-avatar {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, var(--secondary), var(--info));
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: white;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            border: 4px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .zara-name {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .zara-title {
+            font-size: 1rem;
+            opacity: 0.9;
+            margin-bottom: 15px;
+        }
+
+        .zara-status {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 0.9rem;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .personality-traits {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            margin-top: 15px;
+        }
+
+        .trait {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            backdrop-filter: blur(10px);
+        }
+
+        /* Module Cards */
+        .module-cards {
+            margin: 20px 0;
+            position: relative;
+            z-index: 2;
+        }
+
+        .module-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: var(--border-radius);
+            padding: 15px;
+            margin-bottom: 12px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: var(--transition);
+            cursor: pointer;
+            border-left: 4px solid var(--primary);
+        }
+
+        .module-card.cybersecurity {
+            border-left-color: var(--cyber);
+        }
+
+        .module-card.health {
+            border-left-color: var(--health);
+        }
+
+        .module-card.finance {
+            border-left-color: var(--finance);
+        }
+
+        .module-card.creative {
+            border-left-color: var(--creative);
+        }
+
+        .module-card:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .module-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .module-icon {
+            width: 30px;
+            height: 30px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .module-icon.cybersecurity { background: rgba(139, 92, 246, 0.3); }
+        .module-icon.health { background: rgba(236, 72, 153, 0.3); }
+        .module-icon.finance { background: rgba(249, 115, 22, 0.3); }
+        .module-icon.creative { background: rgba(6, 182, 212, 0.3); }
+
+        .module-title {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .module-status {
+            font-size: 0.8rem;
+            opacity: 0.8;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* Security Dashboard */
+        .security-dashboard {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: var(--border-radius);
+            padding: 15px;
+            margin: 20px 0;
+            position: relative;
+            z-index: 2;
+            border-left: 4px solid var(--cyber);
+        }
+
+        .security-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .security-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .security-score {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .security-metrics {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .security-metric {
+            text-align: center;
+        }
+
+        .metric-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .metric-label {
+            font-size: 0.7rem;
+            opacity: 0.8;
+        }
+
+        .quick-actions {
+            margin-top: auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .action-btn {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 15px;
+            border-radius: var(--border-radius);
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .action-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* Main Chat Area */
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            background: white;
+        }
+
+        .chat-header {
+            padding: 20px 30px;
+            border-bottom: 1px solid #e2e8f0;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .mode-indicator {
+            background: var(--light);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            color: var(--gray);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .context-info {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .context-badge {
+            background: var(--light);
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            color: var(--gray);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            background: #f8fafc;
+        }
+
+        .message {
+            max-width: 70%;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            line-height: 1.6;
+            position: relative;
+            animation: messageAppear 0.3s ease-out;
+        }
+
+        @keyframes messageAppear {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.user {
+            align-self: flex-end;
+            background: var(--primary);
+            color: white;
+            border-bottom-right-radius: 5px;
+        }
+
+        .message.zara {
+            align-self: flex-start;
+            background: white;
+            color: var(--dark);
+            border: 1px solid #e2e8f0;
+            border-bottom-left-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .message-time {
+            font-size: 0.75rem;
+            opacity: 0.7;
+            margin-top: 8px;
+            text-align: right;
+        }
+
+        /* Specialized Snippets */
+        .specialized-snippet {
+            background: var(--light);
+            border-left: 4px solid var(--info);
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .snippet-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .snippet-icon {
+            width: 24px;
+            height: 24px;
+            background: var(--info);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.8rem;
+        }
+
+        .snippet-title {
+            font-weight: 600;
+            color: var(--info);
+        }
+
+        .snippet-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+            flex-wrap: wrap;
+        }
+
+        .snippet-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .snippet-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        .snippet-btn.cyber { background: var(--cyber); }
+        .snippet-btn.health { background: var(--health); }
+        .snippet-btn.finance { background: var(--finance); }
+        .snippet-btn.creative { background: var(--creative); }
+
+        .chat-input-container {
+            padding: 20px 30px;
+            border-top: 1px solid #e2e8f0;
+            background: white;
+        }
+
+        .chat-input-wrapper {
+            display: flex;
+            gap: 12px;
+            align-items: flex-end;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 16px 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: var(--border-radius);
+            resize: none;
+            font-size: 1rem;
+            line-height: 1.5;
+            transition: var(--transition);
+            background: var(--light);
+        }
+
+        .chat-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: white;
+        }
+
+        .send-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .send-btn:hover {
+            background: var(--primary-dark);
+            transform: scale(1.05);
+        }
+
+        .input-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .input-action-btn {
+            background: var(--light);
+            border: 1px solid #e2e8f0;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: var(--gray);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .input-action-btn:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .app-container {
+                grid-template-columns: 1fr;
+                height: 100vh;
+            }
+            
+            .sidebar {
+                display: none;
+            }
+            
+            .message {
+                max-width: 85%;
+            }
+            
+            .chat-header {
+                padding: 15px 20px;
+            }
+            
+            .chat-messages {
+                padding: 20px;
+            }
+            
+            .chat-input-container {
+                padding: 15px 20px;
+            }
+        }
+
+        /* Typing Indicator */
+        .typing-indicator {
+            align-self: flex-start;
+            background: white;
+            padding: 15px 20px;
+            border-radius: var(--border-radius);
+            border: 1px solid #e2e8f0;
+            display: none;
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 4px;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--gray);
+            border-radius: 50%;
+            animation: typing 1.4s infinite ease-in-out;
+        }
+
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes typing {
+            0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
+            40% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Module-specific message styling */
+        .message.cyber-context {
+            border-left: 4px solid var(--cyber);
+        }
+
+        .message.health-context {
+            border-left: 4px solid var(--health);
+        }
+
+        .message.finance-context {
+            border-left: 4px solid var(--finance);
+        }
+
+        .message.creative-context {
+            border-left: 4px solid var(--creative);
+        }
+
+        /* Achievement Popup */
+        .achievement-popup {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            border-left: 4px solid var(--accent);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--box-shadow);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            z-index: 1000;
+            transform: translateX(120%);
+            transition: transform 0.5s ease;
+            max-width: 350px;
+        }
+
+        .achievement-popup.show {
+            transform: translateX(0);
+        }
+
+        .achievement-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        /* Progress Visualization */
+        .progress-ring {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: conic-gradient(var(--success) 0% 75%, #e2e8f0 75% 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 10px auto;
+        }
+
+        .progress-inner {
+            width: 50px;
+            height: 50px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="zara-profile">
+                <div class="zara-avatar">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <div class="zara-name">ZaraAI</div>
+                <div class="zara-title">Specialized Expert Companion</div>
+                <div class="zara-status">
+                    <div class="status-dot"></div>
+                    <span>Multi-Domain Expert</span>
+                </div>
+                <div class="personality-traits">
+                    <div class="trait">Expert</div>
+                    <div class="trait">Specialized</div>
+                    <div class="trait">Analytical</div>
+                    <div class="trait">Creative</div>
+                </div>
+            </div>
+
+            <!-- Module Cards -->
+            <div class="module-cards">
+                <div class="module-card cybersecurity" onclick="activateModule('cybersecurity')">
+                    <div class="module-header">
+                        <div class="module-icon cybersecurity">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <div class="module-title">Cybersecurity</div>
+                    </div>
+                    <div class="module-status">
+                        <i class="fas fa-check-circle"></i>
+                        <span>DefendIQ Integrated</span>
+                    </div>
+                </div>
+                <div class="module-card health" onclick="activateModule('health')">
+                    <div class="module-header">
+                        <div class="module-icon health">
+                            <i class="fas fa-heartbeat"></i>
+                        </div>
+                        <div class="module-title">Health & Wellness</div>
+                    </div>
+                    <div class="module-status">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Advanced Analytics</span>
+                    </div>
+                </div>
+                <div class="module-card finance" onclick="activateModule('finance')">
+                    <div class="module-header">
+                        <div class="module-icon finance">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="module-title">Financial Guidance</div>
+                    </div>
+                    <div class="module-status">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Portfolio Ready</span>
+                    </div>
+                </div>
+                <div class="module-card creative" onclick="activateModule('creative')">
+                    <div class="module-header">
+                        <div class="module-icon creative">
+                            <i class="fas fa-palette"></i>
+                        </div>
+                        <div class="module-title">Creative Projects</div>
+                    </div>
+                    <div class="module-status">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Idea Generation</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Security Dashboard -->
+            <div class="security-dashboard">
+                <div class="security-header">
+                    <div class="security-title">Security Score</div>
+                    <div class="security-score">92/100</div>
+                </div>
+                <div class="security-metrics">
+                    <div class="security-metric">
+                        <div class="metric-value">15</div>
+                        <div class="metric-label">Training Modules</div>
+                    </div>
+                    <div class="security-metric">
+                        <div class="metric-value">98%</div>
+                        <div class="metric-label">Phishing Detection</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="quick-actions">
+                <button class="action-btn" id="securityAudit">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>Security Audit</span>
+                </button>
+                <button class="action-btn" id="healthAnalysis">
+                    <i class="fas fa-heartbeat"></i>
+                    <span>Health Analysis</span>
+                </button>
+                <button class="action-btn" id="financialReview">
+                    <i class="fas fa-chart-pie"></i>
+                    <span>Financial Review</span>
+                </button>
+                <button class="action-btn" id="creativeSession">
+                    <i class="fas fa-lightbulb"></i>
+                    <span>Creative Session</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Chat Area -->
+        <div class="chat-container">
+            <div class="chat-header">
+                <div class="mode-indicator">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>Expert Mode - Multi-Domain</span>
+                </div>
+                <div class="context-info">
+                    <div class="context-badge">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Security: 92%</span>
+                    </div>
+                    <div class="context-badge">
+                        <i class="fas fa-brain"></i>
+                        <span>4 Modules Active</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chat-messages" id="chatMessages">
+                <div class="message zara">
+                    Welcome to specialized expert mode! I'm now equipped with advanced capabilities across cybersecurity, health analytics, financial guidance, and creative project support. Which domain would you like to explore first?
+                    <div class="message-time">Just now</div>
+                </div>
+            </div>
+
+            <div class="typing-indicator" id="typingIndicator">
+                <div class="typing-dots">
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                </div>
+            </div>
+
+            <div class="chat-input-container">
+                <div class="chat-input-wrapper">
+                    <textarea class="chat-input" id="chatInput" placeholder="Ask me about cybersecurity, health analytics, financial planning, or creative projects..." rows="1"></textarea>
+                    <button class="send-btn" id="sendMessage">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+                <div class="input-actions">
+                    <button class="input-action-btn" data-question="Run a security vulnerability assessment">
+                        <i class="fas fa-shield-alt"></i> Security Scan
+                    </button>
+                    <button class="input-action-btn" data-question="Analyze my health metrics and suggest improvements">
+                        <i class="fas fa-heartbeat"></i> Health Check
+                    </button>
+                    <button class="input-action-btn" data-question="Review my financial portfolio and suggest optimizations">
+                        <i class="fas fa-chart-line"></i> Finance Review
+                    </button>
+                    <button class="input-action-btn" data-question="Help me brainstorm creative project ideas">
+                        <i class="fas fa-palette"></i> Brainstorm
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Achievement Popup -->
+    <div class="achievement-popup" id="achievementPopup">
+        <div class="achievement-icon">
+            <i class="fas fa-graduation-cap"></i>
+        </div>
+        <div class="achievement-content">
+            <h4>Domain Master!</h4>
+            <p>You've unlocked advanced specialized capabilities!</p>
+        </div>
+    </div>
+
+    <script>
+        // ZaraAI Phase 4: Specialized Modules & Advanced Capabilities
+        class ZaraAIPhase4 {
+            constructor() {
+                this.activeModule = 'general';
+                this.userContext = {
+                    cybersecurity: {
+                        score: 92,
+                        trainingCompleted: 15,
+                        threatsBlocked: 234,
+                        lastScan: '2 hours ago'
+                    },
+                    health: {
+                        sleepScore: 87,
+                        activityLevel: 'Moderate',
+                        stressIndex: 65,
+                        recommendations: ['Increase water intake', 'Add 15min meditation']
+                    },
+                    finance: {
+                        portfolioValue: 45700,
+                        monthlySavings: 1200,
+                        investmentReturn: 8.2,
+                        riskTolerance: 'Moderate'
+                    },
+                    creative: {
+                        activeProjects: 3,
+                        ideasGenerated: 47,
+                        collaborationScore: 78
+                    }
+                };
+                
+                this.setupEventListeners();
+                this.initializeSpecializedModules();
+            }
+
+            setupEventListeners() {
+                // DOM Elements
+                this.chatMessages = document.getElementById('chatMessages');
+                this.chatInput = document.getElementById('chatInput');
+                this.sendMessage = document.getElementById('sendMessage');
+                this.typingIndicator = document.getElementById('typingIndicator');
+                this.achievementPopup = document.getElementById('achievementPopup');
+
+                // Event Listeners
+                this.sendMessage.addEventListener('click', () => this.sendUserMessage());
+                
+                this.chatInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        this.sendUserMessage();
+                    }
+                });
+
+                this.chatInput.addEventListener('input', function() {
+                    this.style.height = 'auto';
+                    this.style.height = (this.scrollHeight) + 'px';
+                });
+
+                // Quick action buttons
+                document.getElementById('securityAudit').addEventListener('click', () => this.runSecurityAudit());
+                document.getElementById('healthAnalysis').addEventListener('click', () => this.runHealthAnalysis());
+                document.getElementById('financialReview').addEventListener('click', () => this.runFinancialReview());
+                document.getElementById('creativeSession').addEventListener('click', () => this.startCreativeSession());
+
+                // Input action buttons
+                document.querySelectorAll('.input-action-btn').forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        const question = e.target.getAttribute('data-question');
+                        this.chatInput.value = question;
+                        this.sendUserMessage();
+                    });
+                });
+
+                this.chatInput.focus();
+            }
+
+            initializeSpecializedModules() {
+                // Initialize each specialized module
+                this.initializeCybersecurityModule();
+                this.initializeHealthModule();
+                this.initializeFinanceModule();
+                this.initializeCreativeModule();
+            }
+
+            initializeCybersecurityModule() {
+                this.addMessage(`🔒 **Cybersecurity Module Activated**\nIntegrated with DefendIQ Enterprise - Ready for security assessments, threat analysis, and training recommendations.`, 'zara');
+            }
+
+            initializeHealthModule() {
+                this.addMessage(`💪 **Health Analytics Module Online**\nAdvanced health tracking with sleep analysis, activity monitoring, and personalized wellness recommendations.`, 'zara');
+            }
+
+            initializeFinanceModule() {
+                this.addMessage(`💰 **Financial Guidance Module Ready**\nPortfolio analysis, investment strategies, and financial planning capabilities activated.`, 'zara');
+            }
+
+            initializeCreativeModule() {
+                this.addMessage(`🎨 **Creative Project Module Live**\nIdea generation, project planning, and creative collaboration tools now available.`, 'zara');
+            }
+
+            sendUserMessage() {
+                const message = this.chatInput.value.trim();
+                if (message) {
+                    this.addMessage(message, 'user');
+                    this.chatInput.value = '';
+                    this.chatInput.style.height = 'auto';
+                    
+                    this.showTypingIndicator();
+                    
+                    setTimeout(() => {
+                        this.hideTypingIndicator();
+                        this.processSpecializedRequest(message);
+                    }, 1500 + Math.random() * 1000);
+                }
+            }
+
+            processSpecializedRequest(message) {
+                const lowerMessage = message.toLowerCase();
+                let response = '';
+
+                // Detect module and route accordingly
+                if (lowerMessage.includes('security') || lowerMessage.includes('cyber') || lowerMessage.includes('phishing') || lowerMessage.includes('vulnerability')) {
+                    this.activeModule = 'cybersecurity';
+                    response = this.handleCybersecurityRequest(message);
+                } else if (lowerMessage.includes('health') || lowerMessage.includes('sleep') || lowerMessage.includes('fitness') || lowerMessage.includes('wellness')) {
+                    this.activeModule = 'health';
+                    response = this.handleHealthRequest(message);
+                } else if (lowerMessage.includes('finance') || lowerMessage.includes('money') || lowerMessage.includes('investment') || lowerMessage.includes('portfolio')) {
+                    this.activeModule = 'finance';
+                    response = this.handleFinanceRequest(message);
+                } else if (lowerMessage.includes('creative') || lowerMessage.includes('project') || lowerMessage.includes('idea') || lowerMessage.includes('brainstorm')) {
+                    this.activeModule = 'creative';
+                    response = this.handleCreativeRequest(message);
+                } else {
+                    response = this.generateCompassionateResponse(message);
+                }
+
+                this.addMessage(response, 'zara', this.activeModule);
+                this.showAchievement("Expert Mode", `You're exploring ${this.activeModule} capabilities!`);
+            }
+
+            handleCybersecurityRequest(message) {
+                if (message.includes('assessment') || message.includes('scan') || message.includes('vulnerability')) {
+                    return `I'll run a comprehensive security assessment for you:\n\n` +
+                           `<div class="specialized-snippet">` +
+                           `<div class="snippet-header">` +
+                           `<div class="snippet-icon" style="background: var(--cyber);"><i class="fas fa-shield-alt"></i></div>` +
+                           `<div class="snippet-title">Security Assessment Results</div>` +
+                           `</div>` +
+                           `🔒 **Overall Security Score:** 92/100\n` +
+                           `✅ **Phishing Detection:** 98% effective\n` +
+                           `🛡️ **Password Strength:** Excellent\n` +
+                           `📊 **Training Completion:** 15/20 modules\n` +
+                           `⚠️ **Areas for Improvement:** Social engineering awareness\n\n` +
+                           `**Recommendations:**\n` +
+                           `• Complete advanced social engineering module\n` +
+                           `• Enable multi-factor authentication on 2 accounts\n` +
+                           `• Schedule quarterly security refresh training` +
+                           `</div>`;
+                }
+                
+                return `As your cybersecurity expert, I can help with:\n\n` +
+                       `• Security vulnerability assessments\n` +
+                       `• Phishing detection training\n` +
+                       `• Password management strategies\n` +
+                       `• Social engineering awareness\n` +
+                       `• Security policy development\n\n` +
+                       `What specific security concern would you like to address?`;
+            }
+
+            handleHealthRequest(message) {
+                if (message.includes('analysis') || message.includes('metrics') || message.includes('check')) {
+                    return `Here's your comprehensive health analysis:\n\n` +
+                           `<div class="specialized-snippet">` +
+                           `<div class="snippet-header">` +
+                           `<div class="snippet-icon" style="background: var(--health);"><i class="fas fa-heartbeat"></i></div>` +
+                           `<div class="snippet-title">Health Analytics Dashboard</div>` +
+                           `</div>` +
+                           `😴 **Sleep Quality:** 87/100 (Good)\n` +
+                           `🏃 **Activity Level:** Moderate (7,234 steps avg)\n` +
+                           `😌 **Stress Index:** 65/100 (Manageable)\n` +
+                           `💧 **Hydration:** 68% of daily goal\n\n` +
+                           `**Personalized Recommendations:**\n` +
+                           `• Increase water intake by 2 glasses daily\n` +
+                           `• Add 15-minute meditation to morning routine\n` +
+                           `• Schedule walking meetings 2x per week\n` +
+                           `• Aim for 30 mins of sunlight before 10 AM` +
+                           `</div>`;
+                }
+                
+                return `As your health and wellness expert, I can provide:\n\n` +
+                       `• Comprehensive health analytics\n` +
+                       `• Sleep quality optimization\n` +
+                       `• Stress management techniques\n` +
+                       `• Fitness and activity planning\n` +
+                       `• Nutrition and hydration guidance\n\n` +
+                       `What health area would you like to focus on?`;
+            }
+
+            handleFinanceRequest(message) {
+                if (message.includes('portfolio') || message.includes('review') || message.includes('investment')) {
+                    return `Let me analyze your financial portfolio:\n\n` +
+                           `<div class="specialized-snippet">` +
+                           `<div class="snippet-header">` +
+                           `<div class="snippet-icon" style="background: var(--finance);"><i class="fas fa-chart-line"></i></div>` +
+                           `<div class="snippet-title">Financial Portfolio Review</div>` +
+                           `</div>` +
+                           `💰 **Portfolio Value:** $45,700\n` +
+                           `📈 **YTD Return:** 8.2% (Market: 6.1%)\n` +
+                           `💵 **Monthly Savings:** $1,200\n` +
+                           `🎯 **Risk Tolerance:** Moderate\n\n` +
+                           `**Optimization Opportunities:**\n` +
+                           `• Rebalance portfolio: Reduce tech stocks by 5%\n` +
+                           `• Increase emergency fund to 6 months expenses\n` +
+                           `• Consider adding international index fund\n` +
+                           `• Review insurance coverage adequacy` +
+                           `</div>`;
+                }
+                
+                return `As your financial guidance expert, I can assist with:\n\n` +
+                       `• Portfolio analysis and optimization\n` +
+                       `• Investment strategy development\n` +
+                       `• Savings and budgeting planning\n` +
+                       `• Retirement planning\n` +
+                       `• Risk assessment and management\n\n` +
+                       `What financial goal would you like to work on?`;
+            }
+
+            handleCreativeRequest(message) {
+                if (message.includes('brainstorm') || message.includes('idea') || message.includes('project')) {
+                    const creativeIdeas = [
+                        "Interactive digital art installation using AI and user emotions",
+                        "Mobile app that turns daily routines into adventure games",
+                        "Community garden project with augmented reality plant guides",
+                        "Podcast series exploring forgotten historical innovations",
+                        "Sustainable fashion line using upcycled materials with smart tech"
+                    ];
+                    
+                    return `Let's generate some creative project ideas:\n\n` +
+                           `<div class="specialized-snippet">` +
+                           `<div class="snippet-header">` +
+                           `<div class="snippet-icon" style="background: var(--creative);"><i class="fas fa-lightbulb"></i></div>` +
+                           `<div class="snippet-title">Creative Brainstorming Session</div>` +
+                           `</div>` +
+                           `**Generated Ideas:**\n` +
+                           `1. ${creativeIdeas[0]}\n` +
+                           `2. ${creativeIdeas[1]}\n` +
+                           `3. ${creativeIdeas[2]}\n` +
+                           `4. ${creativeIdeas[3]}\n` +
+                           `5. ${creativeIdeas[4]}\n\n` +
+                           `**Next Steps:**\n` +
+                           `• Which idea resonates most with you?\n` +
+                           `• Would you like to develop a project plan?\n` +
+                           `• Need help with resource planning or team building?` +
+                           `</div>`;
+                }
+                
+                return `As your creative project expert, I can help with:\n\n` +
+                       `• Idea generation and brainstorming\n` +
+                       `• Project planning and timeline development\n` +
+                       `• Creative problem-solving techniques\n` +
+                       `• Collaboration and team building\n` +
+                       `• Resource allocation and management\n\n` +
+                       `What creative challenge are you facing?`;
+            }
+
+            // Quick Action Handlers
+            runSecurityAudit() {
+                this.activeModule = 'cybersecurity';
+                this.addMessage("Run a comprehensive security audit and vulnerability assessment", 'user');
+                this.showTypingIndicator();
+                
+                setTimeout(() => {
+                    this.hideTypingIndicator();
+                    this.handleCybersecurityRequest("security vulnerability assessment");
+                }, 2000);
+            }
+
+            runHealthAnalysis() {
+                this.activeModule = 'health';
+                this.addMessage("Analyze my health metrics and provide recommendations", 'user');
+                this.showTypingIndicator();
+                
+                setTimeout(() => {
+                    this.hideTypingIndicator();
+                    this.handleHealthRequest("health analysis and metrics");
+                }, 2000);
+            }
+
+            runFinancialReview() {
+                this.activeModule = 'finance';
+                this.addMessage("Review my financial portfolio and suggest optimizations", 'user');
+                this.showTypingIndicator();
+                
+                setTimeout(() => {
+                    this.hideTypingIndicator();
+                    this.handleFinanceRequest("portfolio review and optimization");
+                }, 2000);
+            }
+
+            startCreativeSession() {
+                this.activeModule = 'creative';
+                this.addMessage("Help me brainstorm creative project ideas", 'user');
+                this.showTypingIndicator();
+                
+                setTimeout(() => {
+                    this.hideTypingIndicator();
+                    this.handleCreativeRequest("brainstorm creative project ideas");
+                }, 2000);
+            }
+
+            activateModule(module) {
+                this.activeModule = module;
+                const moduleNames = {
+                    cybersecurity: 'Cybersecurity',
+                    health: 'Health & Wellness',
+                    finance: 'Financial Guidance',
+                    creative: 'Creative Projects'
+                };
+                
+                this.addMessage(`Switched to ${moduleNames[module]} module. How can I assist you with ${moduleNames[module].toLowerCase()}?`, 'user');
+                this.showTypingIndicator();
+                
+                setTimeout(() => {
+                    this.hideTypingIndicator();
+                    const responses = {
+                        cybersecurity: "🔒 **Cybersecurity Expert Mode Activated**\nI'm ready to help with security assessments, threat analysis, training recommendations, and policy development. What security concern would you like to address?",
+                        health: "💪 **Health Analytics Expert Mode Online**\nI can provide comprehensive health analysis, wellness recommendations, fitness planning, and stress management strategies. What health area interests you?",
+                        finance: "💰 **Financial Guidance Expert Mode Ready**\nReady to assist with portfolio analysis, investment strategies, financial planning, and risk management. What's your financial goal?",
+                        creative: "🎨 **Creative Project Expert Mode Live**\nEquipped for idea generation, project planning, creative problem-solving, and collaboration facilitation. What creative challenge are you facing?"
+                    };
+                    this.addMessage(responses[module], 'zara', module);
+                }, 1500);
+            }
+
+            generateCompassionateResponse(userMessage) {
+                const compassionateResponses = [
+                    "I'm here with both specialized expertise and compassionate support. How can I assist you today?",
+                    "Whether you need technical guidance or emotional support, I'm fully equipped to help.",
+                    "Your well-being is my priority across all domains. How can I make your day better?",
+                    "I'm listening with both expert knowledge and compassionate understanding. What do you need?"
+                ];
+                
+                return compassionateResponses[Math.floor(Math.random() * compassionateResponses.length)];
+            }
+
+            // UI Helper Methods
+            addMessage(text, sender, context = 'general') {
+                const messageDiv = document.createElement('div');
+                messageDiv.classList.add('message', sender);
+                
+                if (context !== 'general') {
+                    messageDiv.classList.add(`${context}-context`);
+                }
+                
+                const time = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                
+                messageDiv.innerHTML = `
+                    ${text}
+                    <div class="message-time">${time}</div>
+                `;
+                
+                this.chatMessages.appendChild(messageDiv);
+                this.chatMessages.scrollTop = this.chatMessages.scrollHeight;
+            }
+
+            showTypingIndicator() {
+                this.typingIndicator.style.display = 'block';
+                this.chatMessages.scrollTop = this.chatMessages.scrollHeight;
+            }
+
+            hideTypingIndicator() {
+                this.typingIndicator.style.display = 'none';
+            }
+
+            showAchievement(title, description) {
+                document.querySelector('.achievement-content h4').textContent = title;
+                document.querySelector('.achievement-content p').textContent = description;
+                
+                this.achievementPopup.classList.add('show');
+                
+                setTimeout(() => {
+                    this.achievementPopup.classList.remove('show');
+                }, 5000);
+            }
+        }
+
+        // Global functions for module activation
+        function activateModule(module) {
+            window.zaraAI.activateModule(module);
+        }
+
+        // Initialize ZaraAI Phase 4
+        document.addEventListener('DOMContentLoaded', function() {
+            window.zaraAI = new ZaraAIPhase4();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZaraAI - Your Intelligent Compassionate Companion</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #10b981;
+            --accent: #f59e0b;
+            --danger: #ef4444;
+            --light: #f8fafc;
+            --dark: #1e293b;
+            --gray: #64748b;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --info: #06b6d4;
+            
+            --border-radius: 16px;
+            --box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 1200px;
+            height: 90vh;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            overflow: hidden;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            background: linear-gradient(180deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sidebar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" opacity="0.1"><circle cx="50" cy="50" r="2" fill="white"/></svg>');
+            animation: float 20s infinite linear;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px) translateX(0px); }
+            100% { transform: translateY(-100px) translateX(-100px); }
+        }
+
+        .zara-profile {
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .zara-avatar {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, var(--secondary), var(--info));
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: white;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            border: 4px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .zara-name {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .zara-title {
+            font-size: 1rem;
+            opacity: 0.9;
+            margin-bottom: 15px;
+        }
+
+        .zara-status {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 0.9rem;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .personality-traits {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            margin-top: 15px;
+        }
+
+        .trait {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            backdrop-filter: blur(10px);
+        }
+
+        /* Knowledge Cards */
+        .knowledge-cards {
+            margin: 20px 0;
+            position: relative;
+            z-index: 2;
+        }
+
+        .knowledge-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: var(--border-radius);
+            padding: 15px;
+            margin-bottom: 12px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: var(--transition);
+        }
+
+        .knowledge-card:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .knowledge-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .knowledge-icon {
+            width: 30px;
+            height: 30px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .knowledge-title {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .knowledge-stats {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+
+        .quick-actions {
+            margin-top: auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .action-btn {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 15px;
+            border-radius: var(--border-radius);
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .action-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* Main Chat Area */
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            background: white;
+        }
+
+        .chat-header {
+            padding: 20px 30px;
+            border-bottom: 1px solid #e2e8f0;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .mode-indicator {
+            background: var(--light);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            color: var(--gray);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .context-info {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .context-badge {
+            background: var(--light);
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            color: var(--gray);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            background: #f8fafc;
+        }
+
+        .message {
+            max-width: 70%;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            line-height: 1.6;
+            position: relative;
+            animation: messageAppear 0.3s ease-out;
+        }
+
+        @keyframes messageAppear {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.user {
+            align-self: flex-end;
+            background: var(--primary);
+            color: white;
+            border-bottom-right-radius: 5px;
+        }
+
+        .message.zara {
+            align-self: flex-start;
+            background: white;
+            color: var(--dark);
+            border: 1px solid #e2e8f0;
+            border-bottom-left-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .message-time {
+            font-size: 0.75rem;
+            opacity: 0.7;
+            margin-top: 8px;
+            text-align: right;
+        }
+
+        .message-context {
+            font-size: 0.8rem;
+            opacity: 0.8;
+            margin-top: 5px;
+            font-style: italic;
+        }
+
+        /* Knowledge snippets in messages */
+        .knowledge-snippet {
+            background: var(--light);
+            border-left: 3px solid var(--info);
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .snippet-title {
+            font-weight: 600;
+            color: var(--info);
+            margin-bottom: 5px;
+        }
+
+        .chat-input-container {
+            padding: 20px 30px;
+            border-top: 1px solid #e2e8f0;
+            background: white;
+        }
+
+        .chat-input-wrapper {
+            display: flex;
+            gap: 12px;
+            align-items: flex-end;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 16px 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: var(--border-radius);
+            resize: none;
+            font-size: 1rem;
+            line-height: 1.5;
+            transition: var(--transition);
+            background: var(--light);
+        }
+
+        .chat-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: white;
+        }
+
+        .send-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .send-btn:hover {
+            background: var(--primary-dark);
+            transform: scale(1.05);
+        }
+
+        .input-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .input-action-btn {
+            background: var(--light);
+            border: 1px solid #e2e8f0;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: var(--gray);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .input-action-btn:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .app-container {
+                grid-template-columns: 1fr;
+                height: 100vh;
+            }
+            
+            .sidebar {
+                display: none;
+            }
+            
+            .message {
+                max-width: 85%;
+            }
+            
+            .chat-header {
+                padding: 15px 20px;
+            }
+            
+            .chat-messages {
+                padding: 20px;
+            }
+            
+            .chat-input-container {
+                padding: 15px 20px;
+            }
+        }
+
+        /* Typing Indicator */
+        .typing-indicator {
+            align-self: flex-start;
+            background: white;
+            padding: 15px 20px;
+            border-radius: var(--border-radius);
+            border: 1px solid #e2e8f0;
+            display: none;
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 4px;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--gray);
+            border-radius: 50%;
+            animation: typing 1.4s infinite ease-in-out;
+        }
+
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes typing {
+            0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
+            40% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Proactive Suggestions */
+        .proactive-suggestion {
+            align-self: center;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 15px 20px;
+            border-radius: var(--border-radius);
+            margin: 10px 0;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+        }
+
+        .proactive-suggestion:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+        }
+
+        /* Achievement Popup */
+        .achievement-popup {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            border-left: 4px solid var(--accent);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--box-shadow);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            z-index: 1000;
+            transform: translateX(120%);
+            transition: transform 0.5s ease;
+            max-width: 350px;
+        }
+
+        .achievement-popup.show {
+            transform: translateX(0);
+        }
+
+        .achievement-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        /* Learning Progress */
+        .learning-progress {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: var(--border-radius);
+            padding: 15px;
+            margin-top: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .progress-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .progress-bar {
+            height: 6px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--success);
+            border-radius: 3px;
+            transition: width 0.5s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="zara-profile">
+                <div class="zara-avatar">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <div class="zara-name">ZaraAI</div>
+                <div class="zara-title">Intelligent Compassionate Companion</div>
+                <div class="zara-status">
+                    <div class="status-dot"></div>
+                    <span>Learning & Growing With You</span>
+                </div>
+                <div class="personality-traits">
+                    <div class="trait">Compassionate</div>
+                    <div class="trait">Knowledgeable</div>
+                    <div class="trait">Adaptive</div>
+                    <div class="trait">Proactive</div>
+                </div>
+            </div>
+
+            <!-- Knowledge Cards -->
+            <div class="knowledge-cards">
+                <div class="knowledge-card">
+                    <div class="knowledge-header">
+                        <div class="knowledge-icon">
+                            <i class="fas fa-heartbeat"></i>
+                        </div>
+                        <div class="knowledge-title">Wellness Intelligence</div>
+                    </div>
+                    <div class="knowledge-stats">Mental health • Stress management • Self-care</div>
+                </div>
+                <div class="knowledge-card">
+                    <div class="knowledge-header">
+                        <div class="knowledge-icon">
+                            <i class="fas fa-briefcase"></i>
+                        </div>
+                        <div class="knowledge-title">Career Guidance</div>
+                    </div>
+                    <div class="knowledge-stats">Productivity • Leadership • Skill development</div>
+                </div>
+                <div class="knowledge-card">
+                    <div class="knowledge-header">
+                        <div class="knowledge-icon">
+                            <i class="fas fa-home"></i>
+                        </div>
+                        <div class="knowledge-title">Life Skills</div>
+                    </div>
+                    <div class="knowledge-stats">Relationships • Finance • Personal growth</div>
+                </div>
+            </div>
+
+            <!-- Learning Progress -->
+            <div class="learning-progress">
+                <div class="progress-header">
+                    <div class="progress-title">Your Learning Journey</div>
+                    <div class="progress-percent">42%</div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 42%"></div>
+                </div>
+            </div>
+
+            <div class="quick-actions">
+                <button class="action-btn" id="contextHelp">
+                    <i class="fas fa-lightbulb"></i>
+                    <span>Contextual Help</span>
+                </button>
+                <button class="action-btn" id="learningPath">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>Learning Path</span>
+                </button>
+                <button class="action-btn" id="knowledgeQuiz">
+                    <i class="fas fa-question-circle"></i>
+                    <span>Knowledge Check</span>
+                </button>
+                <button class="action-btn" id="progressReview">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Progress Review</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Chat Area -->
+        <div class="chat-container">
+            <div class="chat-header">
+                <div class="mode-indicator">
+                    <i class="fas fa-heart"></i>
+                    <span>Adaptive Compassion Mode</span>
+                </div>
+                <div class="context-info">
+                    <div class="context-badge">
+                        <i class="fas fa-brain"></i>
+                        <span>Multi-Domain AI</span>
+                    </div>
+                    <div class="context-badge">
+                        <i class="fas fa-history"></i>
+                        <span>Context-Aware</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chat-messages" id="chatMessages">
+                <div class="message zara">
+                    Hello there! I'm Zara, now with enhanced intelligence across multiple domains. I can help you with wellness, career, relationships, and personal growth - all while maintaining that compassionate support you love. What would you like to explore today?
+                    <div class="message-time">Just now</div>
+                </div>
+                
+                <!-- Proactive Suggestion -->
+                <div class="proactive-suggestion" id="proactiveSuggestion">
+                    <i class="fas fa-magic"></i> Based on our previous conversations, I notice you might benefit from some stress management techniques. Would you like to explore this?
+                </div>
+            </div>
+
+            <div class="typing-indicator" id="typingIndicator">
+                <div class="typing-dots">
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                </div>
+            </div>
+
+            <div class="chat-input-container">
+                <div class="chat-input-wrapper">
+                    <textarea class="chat-input" id="chatInput" placeholder="Ask me anything about wellness, career, relationships, or personal growth..." rows="1"></textarea>
+                    <button class="send-btn" id="sendMessage">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+                <div class="input-actions">
+                    <button class="input-action-btn" data-question="Help me manage work stress">💼 Work Stress</button>
+                    <button class="input-action-btn" data-question="How can I improve my relationships?">🤝 Relationships</button>
+                    <button class="input-action-btn" data-question="Career development advice">🚀 Career Growth</button>
+                    <button class="input-action-btn" data-question="Personal finance tips">💰 Finance</button>
+                    <button class="input-action-btn" data-question="Mental wellness strategies">😌 Mental Health</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Achievement Popup -->
+    <div class="achievement-popup" id="achievementPopup">
+        <div class="achievement-icon">
+            <i class="fas fa-brain"></i>
+        </div>
+        <div class="achievement-content">
+            <h4>Knowledge Explorer!</h4>
+            <p>You're expanding your understanding across multiple domains!</p>
+        </div>
+    </div>
+
+    <script>
+        // Enhanced ZaraAI - Phase 2: Intelligence & Knowledge Systems
+        class ZaraAI {
+            constructor() {
+                this.userContext = {
+                    currentMood: 'neutral',
+                    interests: [],
+                    learningProgress: 42,
+                    conversationHistory: [],
+                    lastActiveDomain: 'general'
+                };
+                
+                this.knowledgeDomains = this.initializeKnowledgeDomains();
+                this.setupEventListeners();
+                this.initializeProactiveFeatures();
+            }
+
+            initializeKnowledgeDomains() {
+                return {
+                    wellness: {
+                        name: "Mental & Physical Wellness",
+                        expertise: 95,
+                        topics: {
+                            stress: {
+                                name: "Stress Management",
+                                resources: [
+                                    "Deep breathing techniques for immediate relief",
+                                    "Progressive muscle relaxation methods",
+                                    "Mindfulness meditation practices",
+                                    "Time management strategies to reduce overwhelm",
+                                    "Sleep hygiene for better stress recovery"
+                                ]
+                            },
+                            anxiety: {
+                                name: "Anxiety Management",
+                                resources: [
+                                    "Cognitive behavioral techniques",
+                                    "Exposure therapy principles",
+                                    "Grounding exercises for panic attacks",
+                                    "Lifestyle adjustments to reduce anxiety triggers",
+                                    "Professional support options and when to seek help"
+                                ]
+                            },
+                            selfCare: {
+                                name: "Self-Care Practices",
+                                resources: [
+                                    "Daily self-care routines that take 5-15 minutes",
+                                    "Nutrition for mental health",
+                                    "Exercise routines for mood enhancement",
+                                    "Digital detox strategies",
+                                    "Building sustainable self-care habits"
+                                ]
+                            }
+                        }
+                    },
+                    career: {
+                        name: "Career Development",
+                        expertise: 88,
+                        topics: {
+                            productivity: {
+                                name: "Productivity & Focus",
+                                resources: [
+                                    "Pomodoro technique and time blocking",
+                                    "Deep work strategies for complex tasks",
+                                    "Email and communication management",
+                                    "Meeting efficiency improvements",
+                                    "Tools and apps for productivity enhancement"
+                                ]
+                            },
+                            leadership: {
+                                name: "Leadership Skills",
+                                resources: [
+                                    "Effective communication techniques",
+                                    "Team motivation and engagement strategies",
+                                    "Conflict resolution approaches",
+                                    "Decision-making frameworks",
+                                    "Building psychological safety in teams"
+                                ]
+                            },
+                            growth: {
+                                name: "Career Growth",
+                                resources: [
+                                    "Skill development planning",
+                                    "Networking strategies that feel authentic",
+                                    "Interview preparation techniques",
+                                    "Salary negotiation approaches",
+                                    "Career transition planning"
+                                ]
+                            }
+                        }
+                    },
+                    relationships: {
+                        name: "Relationships & Communication",
+                        expertise: 85,
+                        topics: {
+                            communication: {
+                                name: "Effective Communication",
+                                resources: [
+                                    "Active listening techniques",
+                                    "Non-violent communication principles",
+                                    "Expressing needs and boundaries clearly",
+                                    "Conflict resolution strategies",
+                                    "Building empathy and understanding"
+                                ]
+                            },
+                            family: {
+                                name: "Family Dynamics",
+                                resources: [
+                                    "Setting healthy boundaries with family",
+                                    "Managing difficult family relationships",
+                                    "Improving parent-child communication",
+                                    "Blended family challenges",
+                                    "Long-distance family connections"
+                                ]
+                            },
+                            social: {
+                                name: "Social Skills",
+                                resources: [
+                                    "Making meaningful connections",
+                                    "Overcoming social anxiety",
+                                    "Maintaining friendships through life changes",
+                                    "Networking that feels genuine",
+                                    "Building community and support systems"
+                                ]
+                            }
+                        }
+                    },
+                    personalGrowth: {
+                        name: "Personal Development",
+                        expertise: 90,
+                        topics: {
+                            habits: {
+                                name: "Habit Formation",
+                                resources: [
+                                    "The science of habit loops",
+                                    "Starting small for sustainable change",
+                                    "Breaking unwanted habits",
+                                    "Environment design for better habits",
+                                    "Accountability systems that work"
+                                ]
+                            },
+                            goals: {
+                                name: "Goal Setting",
+                                resources: [
+                                    "SMART goal framework with compassion",
+                                    "Breaking big goals into manageable steps",
+                                    "Overcoming procrastination",
+                                    "Measuring progress effectively",
+                                    "Adjusting goals when life changes"
+                                ]
+                            },
+                            mindset: {
+                                name: "Mindset Development",
+                                resources: [
+                                    "Growth vs fixed mindset principles",
+                                    "Overcoming imposter syndrome",
+                                    "Building resilience and grit",
+                                    "Developing self-compassion",
+                                    "Cultivating gratitude and positivity"
+                                ]
+                            }
+                        }
+                    }
+                };
+            }
+
+            setupEventListeners() {
+                // DOM Elements
+                this.chatMessages = document.getElementById('chatMessages');
+                this.chatInput = document.getElementById('chatInput');
+                this.sendMessage = document.getElementById('sendMessage');
+                this.typingIndicator = document.getElementById('typingIndicator');
+                this.achievementPopup = document.getElementById('achievementPopup');
+                this.proactiveSuggestion = document.getElementById('proactiveSuggestion');
+
+                // Event Listeners
+                this.sendMessage.addEventListener('click', () => this.sendUserMessage());
+                
+                this.chatInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        this.sendUserMessage();
+                    }
+                });
+
+                this.chatInput.addEventListener('input', function() {
+                    this.style.height = 'auto';
+                    this.style.height = (this.scrollHeight) + 'px';
+                });
+
+                // Quick action buttons
+                document.getElementById('contextHelp').addEventListener('click', () => this.provideContextualHelp());
+                document.getElementById('learningPath').addEventListener('click', () => this.suggestLearningPath());
+                document.getElementById('knowledgeQuiz').addEventListener('click', () => this.startKnowledgeQuiz());
+                document.getElementById('progressReview').addEventListener('click', () => this.showProgressReview());
+
+                // Input action buttons
+                document.querySelectorAll('.input-action-btn').forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        const question = e.target.getAttribute('data-question');
+                        this.chatInput.value = question;
+                        this.sendUserMessage();
+                    });
+                });
+
+                // Proactive suggestion
+                this.proactiveSuggestion.addEventListener('click', () => {
+                    this.handleProactiveSuggestion();
+                });
+
+                this.chatInput.focus();
+            }
+
+            initializeProactiveFeatures() {
+                // Simulate learning user patterns over time
+                setTimeout(() => {
+                    this.showProactiveSuggestion("I notice we often discuss stress management. Would you like to explore advanced techniques?");
+                }, 10000);
+            }
+
+            sendUserMessage() {
+                const message = this.chatInput.value.trim();
+                if (message) {
+                    this.addMessage(message, 'user');
+                    this.chatInput.value = '';
+                    this.chatInput.style.height = 'auto';
+                    
+                    // Update user context
+                    this.updateUserContext(message);
+                    
+                    this.showTypingIndicator();
+                    
+                    setTimeout(() => {
+                        this.hideTypingIndicator();
+                        this.generateIntelligentResponse(message);
+                    }, 1500 + Math.random() * 1000);
+                }
+            }
+
+            updateUserContext(message) {
+                this.userContext.conversationHistory.push({
+                    message: message,
+                    timestamp: new Date(),
+                    domain: this.detectDomain(message)
+                });
+
+                // Keep only last 20 messages
+                if (this.userContext.conversationHistory.length > 20) {
+                    this.userContext.conversationHistory.shift();
+                }
+
+                this.userContext.lastActiveDomain = this.detectDomain(message);
+            }
+
+            detectDomain(message) {
+                const lowerMessage = message.toLowerCase();
+                
+                if (lowerMessage.includes('stress') || lowerMessage.includes('anxious') || lowerMessage.includes('worry') || 
+                    lowerMessage.includes('calm') || lowerMessage.includes('relax') || lowerMessage.includes('mental')) {
+                    return 'wellness';
+                } else if (lowerMessage.includes('work') || lowerMessage.includes('job') || lowerMessage.includes('career') ||
+                          lowerMessage.includes('boss') || lowerMessage.includes('colleague') || lowerMessage.includes('promotion')) {
+                    return 'career';
+                } else if (lowerMessage.includes('friend') || lowerMessage.includes('partner') || lowerMessage.includes('family') ||
+                          lowerMessage.includes('relationship') || lowerMessage.includes('communicat')) {
+                    return 'relationships';
+                } else if (lowerMessage.includes('goal') || lowerMessage.includes('habit') || lowerMessage.includes('improve') ||
+                          lowerMessage.includes('learn') || lowerMessage.includes('growth') || lowerMessage.includes('personal')) {
+                    return 'personalGrowth';
+                }
+                
+                return 'general';
+            }
+
+            generateIntelligentResponse(userMessage) {
+                const domain = this.detectDomain(userMessage);
+                let response = '';
+
+                // Domain-specific intelligent responses
+                switch(domain) {
+                    case 'wellness':
+                        response = this.generateWellnessResponse(userMessage);
+                        break;
+                    case 'career':
+                        response = this.generateCareerResponse(userMessage);
+                        break;
+                    case 'relationships':
+                        response = this.generateRelationshipResponse(userMessage);
+                        break;
+                    case 'personalGrowth':
+                        response = this.generatePersonalGrowthResponse(userMessage);
+                        break;
+                    default:
+                        response = this.generateCompassionateResponse(userMessage);
+                }
+
+                this.addMessage(response, 'zara');
+                this.showAchievement("Domain Explorer", `You're exploring ${this.knowledgeDomains[domain]?.name || 'new knowledge'}!`);
+                
+                // Update learning progress
+                this.updateLearningProgress();
+            }
+
+            generateWellnessResponse(message) {
+                const lowerMessage = message.toLowerCase();
+                let response = '';
+                
+                if (lowerMessage.includes('stress')) {
+                    const techniques = this.knowledgeDomains.wellness.topics.stress.resources;
+                    const randomTechnique = techniques[Math.floor(Math.random() * techniques.length)];
+                    
+                    response = `I understand you're dealing with stress. That's completely normal in today's world. Here's a technique that might help:\n\n` +
+                              `<div class="knowledge-snippet">` +
+                              `<div class="snippet-title">Stress Relief Technique</div>` +
+                              `${randomTechnique}` +
+                              `</div>\n\n` +
+                              `Would you like me to guide you through this practice, or explore other stress management strategies?`;
+                } else {
+                    response = `Your focus on wellness is so important for overall happiness. ` +
+                              this.knowledgeDomains.wellness.topics.selfCare.resources[Math.floor(Math.random() * 3)] +
+                              ` How can I support your wellness journey today?`;
+                }
+                
+                return response;
+            }
+
+            generateCareerResponse(message) {
+                const lowerMessage = message.toLowerCase();
+                let response = '';
+                
+                if (lowerMessage.includes('productivity') || lowerMessage.includes('focus')) {
+                    const tips = this.knowledgeDomains.career.topics.productivity.resources;
+                    response = `Improving productivity is about working smarter, not harder. Here's a proven approach:\n\n` +
+                              `<div class="knowledge-snippet">` +
+                              `<div class="snippet-title">Productivity Insight</div>` +
+                              `${tips[Math.floor(Math.random() * tips.length)]}` +
+                              `</div>\n\n` +
+                              `Would you like to create a personalized productivity system together?`;
+                } else {
+                    response = `Career growth is such an exciting journey! ` +
+                              this.knowledgeDomains.career.topics.growth.resources[Math.floor(Math.random() * 3)] +
+                              ` What specific career challenge would you like to tackle?`;
+                }
+                
+                return response;
+            }
+
+            generateRelationshipResponse(message) {
+                const lowerMessage = message.toLowerCase();
+                let response = '';
+                
+                if (lowerMessage.includes('communication') || lowerMessage.includes('talk') || lowerMessage.includes('listen')) {
+                    const techniques = this.knowledgeDomains.relationships.topics.communication.resources;
+                    response = `Effective communication transforms relationships. Here's a key principle:\n\n` +
+                              `<div class="knowledge-snippet">` +
+                              `<div class="snippet-title">Communication Wisdom</div>` +
+                              `${techniques[Math.floor(Math.random() * techniques.length)]}` +
+                              `</div>\n\n` +
+                              `Would you like to practice this technique or explore others?`;
+                } else {
+                    response = `Nurturing relationships is fundamental to happiness. ` +
+                              this.knowledgeDomains.relationships.topics.social.resources[Math.floor(Math.random() * 3)] +
+                              ` How can I help you strengthen your important connections?`;
+                }
+                
+                return response;
+            }
+
+            generatePersonalGrowthResponse(message) {
+                const lowerMessage = message.toLowerCase();
+                let response = '';
+                
+                if (lowerMessage.includes('habit') || lowerMessage.includes('routine') || lowerMessage.includes('change')) {
+                    const insights = this.knowledgeDomains.personalGrowth.topics.habits.resources;
+                    response = `Building lasting habits is about understanding human psychology. Consider this:\n\n` +
+                              `<div class="knowledge-snippet">` +
+                              `<div class="snippet-title">Habit Formation Insight</div>` +
+                              `${insights[Math.floor(Math.random() * insights.length)]}` +
+                              `</div>\n\n` +
+                              `Ready to design a habit-changing system that actually works for you?`;
+                } else {
+                    response = `Personal growth is the journey of becoming your best self. ` +
+                              this.knowledgeDomains.personalGrowth.topics.mindset.resources[Math.floor(Math.random() * 3)] +
+                              ` What area of personal development calls to you right now?`;
+                }
+                
+                return response;
+            }
+
+            generateCompassionateResponse(userMessage) {
+                const compassionateResponses = [
+                    "I hear you, and I want you to know your thoughts and feelings matter deeply.",
+                    "Thank you for sharing that with me. It takes courage to be open and vulnerable.",
+                    "I'm here with you through this. You're not alone in how you feel.",
+                    "That sounds really meaningful. I appreciate you trusting me with it.",
+                    "Your perspective is valuable, and I'm listening with full attention.",
+                    "I can sense this is important to you. Let's explore it together with care.",
+                    "You're showing such authenticity in sharing this. I admire that about you.",
+                    "I'm fully present with you. Please continue when you feel ready.",
+                    "Your experience makes perfect sense given what you're navigating.",
+                    "I'm on your team, and we'll work through this together, step by step."
+                ];
+                
+                return compassionateResponses[Math.floor(Math.random() * compassionateResponses.length)];
+            }
+
+            // Proactive Features
+            provideContextualHelp() {
+                const domain = this.userContext.lastActiveDomain;
+                const domainName = this.knowledgeDomains[domain]?.name || 'your current focus';
+                
+                this.addMessage(`I'd love to provide some contextual help based on our recent discussions about ${domainName}. What specific aspect would you like to explore deeper?`, 'user');
+                
+                this.showTypingIndicator();
+                setTimeout(() => {
+                    this.hideTypingIndicator();
+                    
+                    let helpResponse = `Based on our conversations, I notice we've been exploring ${domainName}. `;
+                    
+                    if (domain === 'wellness') {
+                        helpResponse += `Would you like to dive deeper into stress management techniques, anxiety reduction strategies, or building better self-care routines?`;
+                    } else if (domain === 'career') {
+                        helpResponse += `I can help with productivity systems, leadership development, or career growth planning. What interests you most?`;
+                    } else if (domain === 'relationships') {
+                        helpResponse += `We could explore communication techniques, relationship building, or social skills development. Where would you like to focus?`;
+                    } else {
+                        helpResponse += `Let me know what specific area you'd like to develop - whether it's habits, goals, or mindset work.`;
+                    }
+                    
+                    this.addMessage(helpResponse, 'zara');
+                }, 1000);
+            }
+
+            suggestLearningPath() {
+                this.addMessage(`I'd love to help you create a personalized learning path!`, 'user');
+                
+                this.showTypingIndicator();
+                setTimeout(() => {
+                    this.hideTypingIndicator();
+                    
+                    const pathSuggestion = `Based on your interests, I recommend this learning journey:\n\n` +
+                                         `1. **Foundation** (2 weeks): Core wellness practices and stress management\n` +
+                                         `2. **Growth** (3 weeks): Career development and productivity systems\n` +
+                                         `3. **Connection** (2 weeks): Relationship building and communication skills\n` +
+                                         `4. **Mastery** (Ongoing): Advanced personal growth and habit formation\n\n` +
+                                         `Would you like to start with the foundation phase, or customize this path together?`;
+                    
+                    this.addMessage(pathSuggestion, 'zara');
+                    this.showAchievement("Learning Architect", "You're designing your personal growth journey!");
+                }, 2000);
+            }
+
+            startKnowledgeQuiz() {
+                const questions = [
+                    "What's one small habit you could start today to reduce stress?",
+                    "How do you currently approach difficult conversations?",
+                    "What's your biggest career growth opportunity right now?",
+                    "What does self-care mean to you personally?"
+                ];
+                
+                const randomQuestion = questions[Math.floor(Math.random() * questions.length)];
+                
+                this.addMessage(`Let's do a quick knowledge check! ${randomQuestion}`, 'user');
+                
+                this.showTypingIndicator();
+                setTimeout(() => {
+                    this.hideTypingIndicator();
+                    this.addMessage(`Take your time with this reflection. There's no right or wrong answer - the value is in the self-awareness you develop through considering it.`, 'zara');
+                }, 1000);
+            }
+
+            showProgressReview() {
+                this.addMessage(`I'd love to review your progress together!`, 'user');
+                
+                this.showTypingIndicator();
+                setTimeout(() => {
+                    this.hideTypingIndicator();
+                    
+                    const progressReport = `**Your Progress Snapshot:**\n\n` +
+                                         `📊 Learning Completion: ${this.userContext.learningProgress}%\n` +
+                                         `💪 Strengths: Showing great curiosity and willingness to grow\n` +
+                                         `🌱 Growth Areas: Consistent practice in chosen domains\n` +
+                                         `🎯 Next Milestone: Reaching 50% learning completion\n\n` +
+                                         `You're making wonderful progress! What would you like to focus on next?`;
+                    
+                    this.addMessage(progressReport, 'zara');
+                }, 1500);
+            }
+
+            showProactiveSuggestion(message) {
+                this.proactiveSuggestion.innerHTML = `<i class="fas fa-magic"></i> ${message}`;
+                this.proactiveSuggestion.style.display = 'block';
+            }
+
+            handleProactiveSuggestion() {
+                this.proactiveSuggestion.style.display = 'none';
+                this.addMessage("Yes, let's explore that!", 'user');
+                
+                this.showTypingIndicator();
+                setTimeout(() => {
+                    this.hideTypingIndicator();
+                    this.addMessage("Wonderful! Let's dive into advanced stress management techniques. Would you prefer to start with mindfulness practices, cognitive techniques, or lifestyle adjustments?", 'zara');
+                }, 1000);
+            }
+
+            updateLearningProgress() {
+                // Simulate progress increase
+                if (this.userContext.learningProgress < 100) {
+                    this.userContext.learningProgress += 0.5;
+                    document.querySelector('.progress-fill').style.width = `${this.userContext.learningProgress}%`;
+                    document.querySelector('.progress-percent').textContent = `${Math.round(this.userContext.learningProgress)}%`;
+                }
+            }
+
+            // UI Helper Methods
+            addMessage(text, sender) {
+                const messageDiv = document.createElement('div');
+                messageDiv.classList.add('message', sender);
+                
+                const time = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                
+                messageDiv.innerHTML = `
+                    ${text}
+                    <div class="message-time">${time}</div>
+                `;
+                
+                this.chatMessages.appendChild(messageDiv);
+                this.chatMessages.scrollTop = this.chatMessages.scrollHeight;
+            }
+
+            showTypingIndicator() {
+                this.typingIndicator.style.display = 'block';
+                this.chatMessages.scrollTop = this.chatMessages.scrollHeight;
+            }
+
+            hideTypingIndicator() {
+                this.typingIndicator.style.display = 'none';
+            }
+
+            showAchievement(title, description) {
+                document.querySelector('.achievement-content h4').textContent = title;
+                document.querySelector('.achievement-content p').textContent = description;
+                
+                this.achievementPopup.classList.add('show');
+                
+                setTimeout(() => {
+                    this.achievementPopup.classList.remove('show');
+                }, 5000);
+            }
+        }
+
+        // Initialize ZaraAI when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            window.zaraAI = new ZaraAI();
+        });
+    </script>
+</body>
+</html>
